@@ -1,20 +1,32 @@
-PROJECT     		= exec-module-name
-#USE_VERBOSE_COMPILE = yes
-USE_X86			= yes
-DISABLE_ASSERTS		= yes
+ifeq ($(PROJECT),)
+	PROJECT	= exec-module-name
+endif
 
+ifeq ($(VERBOSE_COMPILE),yes)
+	USE_VERBOSE_COMPILE = yes
+else
+	USE_VERBOSE_COMPILE = 
+endif
 
-#include dirs
-INCDIR = .\
-         src \
+ifeq ($(ARCH),arm)
+	USE_X86 = no
+else
+	USE_X86	= yes
+endif	
 
-# C source files
-CSRC = $(wildcard src/*.c) \
-       $(wildcard ./*.c) \
+ifeq ($(DISABLE_ASSERTS),yes)
+	DISABLE_ASSERTS = yes
+else
+	DISABLE_ASSERTS	= no
+endif
 
-# CPP source files
-CPPSRC = $(wildcard ./*.cpp) \
-         $(wildcard src/*.cpp) \
+ifeq ($(CROSS_COMPILE),)
+	CROSS_COMPILE = arm-buildroot-linux-gnueabihf-
+endif
+
+ifeq ($(CCACHE),)
+     CCACHE =
+endif
 
 
 ifeq ($(USE_X86),yes)         
@@ -30,13 +42,21 @@ endif
 _LIBS =
 LIBS = $(addprefix -l, $(_LIBS))
 
-ifeq ($(CROSS_COMPILE),)
-	CROSS_COMPILE = /home/user/build/output-saturn/host/usr/bin/arm-buildroot-linux-gnueabihf-
-endif
 
-ifeq ($(CCACHE),)
-     CCACHE =
-endif
+#include dirs
+INCDIR = .\
+         src \
+
+# C source files
+CSRC = $(wildcard src/*.c) \
+       $(wildcard ./*.c) \
+
+# CPP source files
+CPPSRC = $(wildcard ./*.cpp) \
+         $(wildcard src/*.cpp) \
+
+
+
 
 ifeq ($(USE_X86),yes)
 	CPPC = $(CCACHE) g++
@@ -90,15 +110,10 @@ OBJS    = $(COBJS) $(CPPOBJS)
 IINCDIR   = $(patsubst %,-I%,$(INCDIR))
 LLIBDIR   = $(patsubst %,-L%,$(LIBDIR))
 
-ifeq ($(USE_X86),yes)
-	# Generate dependency information
-	COPT   += -MD -MP -MF .dep/$(@F).d
-	CPPOPT += -MD -MP -MF .dep/$(@F).d
-else
-	# Generate dependency information
-	COPT   += -MD -MP -MF .dep/$(@F).d
-	CPPOPT += -MD -MP -MF .dep/$(@F).d
-endif
+
+# Generate dependency information
+COPT   += -MD -MP -MF .dep/$(@F).d
+CPPOPT += -MD -MP -MF .dep/$(@F).d
 
 
 # Paths where to search for sources
