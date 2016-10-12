@@ -1,6 +1,7 @@
 ifeq ($(PROJECT),)
 	PROJECT	= exec-module-name
 endif
+#GPROF_EN = yes
 
 ifeq ($(VERBOSE_COMPILE),yes)
 	USE_VERBOSE_COMPILE = yes
@@ -85,6 +86,12 @@ else
 	LDOPT = 
 endif
 
+ifeq ($(GPROF_EN),yes)
+     CPPOPT += -pg
+     COPT   += -pg
+     LDOPT  += -pg 
+endif
+
 ifeq ($(DISABLE_ASSERTS),yes)
 	CPPOPT += -D NDEBUG
 	COPT   += -D NDEBUG
@@ -133,6 +140,8 @@ ifneq ($(USE_VERBOSE_COMPILE),yes)
 	@echo $(CC) -c $(COPT) -I. $(IINCDIR)
 	@echo C++ compiler options
 	@echo $(CPPC) -c $(CPPOPT) -I. $(IINCDIR)
+	@echo Linker options
+	@echo $(LD) $(LDOPT) -L$(LIBDIR) $(LIBS) 
 endif
 	mkdir -p $(BUILDDIR)
 
