@@ -100,7 +100,9 @@ endif
 
 
 # Various directories
+ifeq ($(BUILDDIR),)
 BUILDDIR  = build
+endif
 OBJDIR    = $(BUILDDIR)/obj
 LSTDIR    = $(BUILDDIR)/lst
 
