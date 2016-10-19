@@ -43,6 +43,9 @@ SRCPATHS = $(sort $(dir $(CSRC)) $(dir $(CPPSRC)))
 COBJS   = $(addprefix $(OBJDIR)/, $(notdir $(CSRC:.c=.o)))
 CPPOBJS = $(addprefix $(OBJDIR)/, $(notdir $(CPPSRC:.cpp=.o)))
 OBJS    = $(COBJS) $(CPPOBJS)
+#lib dir
+LIBDIR  = . #/usr/lib
+LIBS    = $(addprefix -l, $(ULIBS))
 
 # Paths
 IINCDIR   = $(patsubst %,-I%,$(INCDIR))
