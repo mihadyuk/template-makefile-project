@@ -1,7 +1,15 @@
 ifeq ($(PROJECT),)
 	PROJECT	= exec-module-name
 endif
+#USE_CCACHE 			= yes
+#USE_VERBOSE_COMPILE = yes
+#USE_X86				= yes
+#DISABLE_ASSERTS		= yes
 #GPROF_EN = yes
+#LST_FILE_GEN = yes
+#DMP_FILE_GEN = yes
+#ASM_LST_FILE_GEN = yes
+#MAP_FILE_GEN     = yes
 
 ifeq ($(VERBOSE_COMPILE),yes)
 	USE_VERBOSE_COMPILE = yes
@@ -63,27 +71,58 @@ ifeq ($(USE_X86),yes)
 	CPPC = $(CCACHE) g++
 	CC   = $(CCACHE) gcc
 	LD   = $(CCACHE) g++
+	OD   = $(CCACHE) objdump
+	SZ   = $(CCACHE) size
 	#c specific options
 	COPT = -O0 -g3 -Wall -fmessage-length=0
+	
+ifeq ($(ASM_LST_FILE_GEN),yes)	
+	COPT += -Wa,-almsh=$(LSTDIR)/$(notdir $(<:.c=.lst))
+endif	
 
 	#c++ specific options
 	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0
+	
+ifeq ($(ASM_LST_FILE_GEN),yes)	
+	CPPOPT += -Wa,-almsh=$(LSTDIR)/$(notdir $(<:.cpp=.lst))
+endif	
 
 	#linker options
 	LDOPT = 
+
+ifeq ($(MAP_FILE_GEN),yes)	
+	LDOPT += -Wl,-Map=$(BUILDDIR)/$(PROJECT).map
+endif	
+	
+	ODFLAGS	  = -x --syms
 else
 	CPPC = $(CCACHE) $(CROSS_COMPILE)g++
 	CC   = $(CCACHE) $(CROSS_COMPILE)gcc
 	LD   = $(CCACHE) $(CROSS_COMPILE)g++
-	
+	OD   = $(CCACHE) $(CROSS_COMPILE)objdump
+	SZ   = $(CCACHE) $(CROSS_COMPILE)size	
 	#c specific options
 	COPT = -O2 -g3 -Wall -fmessage-length=0
+	
+ifeq ($(ASM_LST_FILE_GEN),yes)	
+	COPT += -Wa,-almsh=$(LSTDIR)/$(notdir $(<:.c=.lst))
+endif	
 
 	#c++ specific options
 	CPPOPT = -std=c++0x -O2 -g3 -Wall -fmessage-length=0
+	
+ifeq ($(ASM_LST_FILE_GEN),yes)	
+	CPPOPT += -Wa,-almsh=$(LSTDIR)/$(notdir $(<:.cpp=.lst))
+endif	
 
 	#linker options
-	LDOPT = 
+	LDOPT =
+	 
+ifeq ($(MAP_FILE_GEN),yes)	
+	LDOPT += -Wl,-Map=$(BUILDDIR)/$(PROJECT).map
+endif	
+	
+	ODFLAGS	  = -x --syms
 endif
 
 ifeq ($(GPROF_EN),yes)
@@ -108,6 +147,12 @@ LSTDIR    = $(BUILDDIR)/lst
 
 # Output directory and files
 OUTFILES = $(BUILDDIR)/$(PROJECT).elf
+ifeq ($(DMP_FILE_GEN),yes)
+	OUTFILES += $(BUILDDIR)/$(PROJECT).dmp
+endif	
+ifeq ($(LST_FILE_GEN),yes)
+    OUTFILES += $(BUILDDIR)/$(PROJECT).list
+endif           
 
 SRCPATHS = $(sort $(dir $(CSRC)) $(dir $(CPPSRC)))
 # Object files groups
@@ -180,7 +225,26 @@ else
 	@$(LD) $(OBJS) $(LDOPT) -L$(LIBDIR) $(LIBS) -o $@
 endif
 
+%.dmp: %.elf
+ifeq ($(USE_VERBOSE_COMPILE),yes)
+	$(OD) $(ODFLAGS) $< > $@
+	$(SZ) $<
+else
+	@echo Creating $@
+	@$(OD) $(ODFLAGS) $< > $@
+	@echo
+	@$(SZ) $<
+endif
 
+%.list: %.elf
+ifeq ($(USE_VERBOSE_COMPILE),yes)
+	$(OD) -S $< > $@
+else
+	@echo Creating $@
+	@$(OD) -S $< > $@
+	@echo
+	@echo Done
+endif
 
 .PHONY: clean
 clean:
