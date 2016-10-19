@@ -73,6 +73,7 @@ ifeq ($(USE_X86),yes)
 	LD   = $(CCACHE) g++
 	OD   = $(CCACHE) objdump
 	SZ   = $(CCACHE) size
+	AR   = $(CCACHE) ar
 	#c specific options
 	COPT = -O0 -g3 -Wall -fmessage-length=0
 	
@@ -100,7 +101,8 @@ else
 	CC   = $(CCACHE) $(CROSS_COMPILE)gcc
 	LD   = $(CCACHE) $(CROSS_COMPILE)g++
 	OD   = $(CCACHE) $(CROSS_COMPILE)objdump
-	SZ   = $(CCACHE) $(CROSS_COMPILE)size	
+	SZ   = $(CCACHE) $(CROSS_COMPILE)size
+	AR   = $(CCACHE) $(CROSS_COMPILE)ar
 	#c specific options
 	COPT = -O2 -g3 -Wall -fmessage-length=0
 	
@@ -177,6 +179,7 @@ VPATH = $(SRCPATHS)
 # Makefile rules
 #
 
+.PHONY: all
 all: $(OBJS) $(OUTFILES)
 
 $(OBJS): | $(BUILDDIR) $(OBJDIR) $(LSTDIR)
@@ -242,6 +245,18 @@ ifeq ($(USE_VERBOSE_COMPILE),yes)
 else
 	@echo Creating $@
 	@$(OD) -S $< > $@
+	@echo
+	@echo Done
+endif
+
+.PHONY: lib
+lib: $(OBJS) $(BUILDDIR)/lib$(PROJECT).a
+
+$(BUILDDIR)/lib$(PROJECT).a: $(OBJS)
+ifeq ($(USE_VERBOSE_COMPILE),yes)
+	$(AR) -r $@ $^
+else
+	@$(AR) -r $@ $^
 	@echo
 	@echo Done
 endif
