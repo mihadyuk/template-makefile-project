@@ -23,7 +23,9 @@ CPPSRC = $(wildcard ./*.cpp) \
 
 #used libs
 #ULIBS = config++ pthread
-ULIBS =
+ifeq ($(ULIBS),)
+	ULIBS =
+endif	
 
 
 CPPC = $(CCACHE) $(CROSS_COMPILE)g++
@@ -32,14 +34,21 @@ LD   = $(CCACHE) $(CROSS_COMPILE)g++
 OD   = $(CCACHE) $(CROSS_COMPILE)objdump
 SZ   = $(CCACHE) $(CROSS_COMPILE)size
 AR   = $(CCACHE) $(CROSS_COMPILE)ar
+
 #c specific options
-COPT = -O2 -g3 -Wall -fmessage-length=0
+ifeq ($(COPT),)
+	COPT = -O2 -g3 -Wall -fmessage-length=0
+endif	
 
 #c++ specific options
-CPPOPT = -std=c++0x -O2 -g3 -Wall -fmessage-length=0
+ifeq ($(CPPOPT),)
+	CPPOPT = -std=c++0x -O2 -g3 -Wall -fmessage-length=0
+endif	
 
 #linker options
-LDOPT =
+ifeq ($(LDOPT),)
+	LDOPT =
+endif	
 	 
 
 

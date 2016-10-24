@@ -7,7 +7,9 @@ endif
 ifeq ($(MAP_FILE_GEN),yes)	
 	LDOPT += -Wl,-Map=$(BUILDDIR)/$(PROJECT).map
 endif	
-ODFLAGS	  = -x --syms
+ifeq ($(ODFLAGS),)
+	ODFLAGS	  = -x --syms
+endif
 
 ifeq ($(GPROF_EN),yes)
      CPPOPT += -pg
