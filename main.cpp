@@ -3,6 +3,25 @@
 #include <stdio.h>
 #include <stdint.h>
 
+using namespace std;
+
+class Base {
+public:
+	Base() { cout << "Base() \n"; }
+	virtual ~Base() { cout << "~Base() \n"; }
+	virtual void vf1() { cout << "Base::vf1() \n"; }
+	virtual void vf2() { cout << "Base::vf2() \n"; }
+	void f() { cout << "Base::f() \n"; }
+};
+
+class Derived : public Base {
+public:
+	Derived() { cout << "Derived() \n";}
+	~Derived() { cout << "~Derived() \n";}
+	void vf1() override {cout << "Derived::vf1() \n";};
+	void vf2() override {cout << "Derived::vf2() \n";};
+};
+
 int f(int *a) {
     int b;
 
@@ -20,7 +39,8 @@ int main(int argc, char *argv[]) {
       printf("%d", test_large_array[i]);
   }
   //printf(f(0)? "true \n" : "false \n");
-
+  //std::cout << "sizeof: " << sizeof(Derived) << "\r\n";
+  //Derived d;	
   //std::cout << "\n template makefile project \n";
   return 0;
 }
