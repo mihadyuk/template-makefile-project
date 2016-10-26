@@ -22,6 +22,32 @@ public:
 	void vf2() override {cout << "Derived::vf2() \n";};
 };
 
+class A {
+public:
+	A() {
+		f1();
+	}
+	~A() {
+		f1();
+	}
+	virtual void f1() {
+		cout << "A::f1()" << endl;
+	}
+};
+
+class B : public A {
+public:
+	B() {
+		f1();
+	}
+	~B() {
+		f1();
+	}
+	void f1() override {
+		cout << "B::f1()" << endl;
+	}
+};
+
 int f(int *a) {
     int b;
 
@@ -40,7 +66,23 @@ int main(int argc, char *argv[]) {
   }
   //printf(f(0)? "true \n" : "false \n");
   //std::cout << "sizeof: " << sizeof(Derived) << "\r\n";
-  //Derived d;	
+  //Derived d;
+  //A *a = new A();
+  //delete a;
+
+  //B *b = new B();
+  //delete b;
+
+#if 0
+  try {
+	  for (char i = 0;;) {
+		  cout << 1 / --i << flush;
+	  }
+  }
+  catch(...) {
+	  cout << "end";
+  }
+#endif
   //std::cout << "\n template makefile project \n";
   return 0;
 }
