@@ -12,6 +12,7 @@ endif
 #include dirs
 INCDIR = .\
          src \
+         utils \
 
 # C source files
 CSRC = $(wildcard src/*.c) \
@@ -20,6 +21,7 @@ CSRC = $(wildcard src/*.c) \
 # CPP source files
 CPPSRC = $(wildcard ./*.cpp) \
          $(wildcard src/*.cpp) \
+         $(wildcard utils/*.cpp) \
 
 #used libs
 #ULIBS = config++ pthread
