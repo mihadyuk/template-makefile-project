@@ -24,7 +24,9 @@ namespace utils {
     if (!_fullPath)
       return "";
     strcpy(_fullPath, fullPath);
-
+    /*
+     * https://linux.die.net/man/3/dirname
+     */
     char *p = ::dirname(_fullPath);
     assert(p);
     if (!p) {
