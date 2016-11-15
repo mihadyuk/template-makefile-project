@@ -3,3 +3,8 @@
 /.settings/
 /.cproject
 /.project
+/template-makefile-project.config
+/template-makefile-project.creator
+/template-makefile-project.creator.user
+/template-makefile-project.files
+/template-makefile-project.includes
