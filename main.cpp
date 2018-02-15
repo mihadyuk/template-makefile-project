@@ -1,5 +1,6 @@
 #include <assert.h>
 #include <iostream>
+#include <stdio.h>
 
 uint8_t bin2bcd(uint8_t bin) {
     union {
@@ -26,9 +27,17 @@ uint8_t bin2bcd(uint8_t bin) {
     return buf.m_buf[1];
 }
 
+#define DAYS2TICK(day, periodUs) (((day) * 24 * 3600 * 1000000UL) / (periodUs))
+
+
 int main(int argc, char *argv[]) {
 
   std::cout << "template makefile project \r\n";
+
+  uint32_t days     = 9;
+  uint32_t periodUs = 500;
+  uint64_t result = DAYS2TICK(days, periodUs);
+  printf("days: %u, periodUs: %u, result: %lu, 0x%.8lX ", days, periodUs, result, result);
   return 0;
 }
 
