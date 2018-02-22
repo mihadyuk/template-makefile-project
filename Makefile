@@ -21,6 +21,10 @@ CSRC = $(wildcard src/*.c) \
 CPPSRC = $(wildcard ./*.cpp) \
          $(wildcard src/*.cpp) \
 
+ifeq ($(LIBDIR),)
+    LIBDIR  = .
+endif
+
 #used libs
 #ULIBS = config++ pthread
 ifeq ($(ULIBS),)

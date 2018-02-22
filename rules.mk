@@ -46,7 +46,7 @@ COBJS   = $(addprefix $(OBJDIR)/, $(notdir $(CSRC:.c=.o)))
 CPPOBJS = $(addprefix $(OBJDIR)/, $(notdir $(CPPSRC:.cpp=.o)))
 OBJS    = $(COBJS) $(CPPOBJS)
 #lib dir
-LIBDIR  = . #/usr/lib
+#LIBDIR  = . #/usr/lib
 LIBS    = $(addprefix -l, $(ULIBS))
 
 # Paths
