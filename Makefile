@@ -1,9 +1,10 @@
 ifeq ($(PROJECT),)
 	PROJECT	= exec-module-name
 endif
+CROSS_COMPILE=/usr/bin/arm-none-eabi-
 #DISABLE_ASSERTS		= yes
 #GPROF_EN = yes
-LST_FILE_GEN = yes
+#LST_FILE_GEN = yes
 DMP_FILE_GEN = yes
 ASM_LST_FILE_GEN = yes
 MAP_FILE_GEN     = yes
