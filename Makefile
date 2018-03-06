@@ -22,6 +22,9 @@ CSRC = $(wildcard src/*.c) \
 CPPSRC = $(wildcard ./*.cpp) \
          $(wildcard src/*.cpp) \
 
+#asm source files
+ASSRC = $(wildcard ./*.S)
+
 ifeq ($(LIBDIR),)
     LIBDIR  = .
 endif
@@ -35,10 +38,12 @@ endif
 
 CPPC = $(CCACHE) $(CROSS_COMPILE)g++
 CC   = $(CCACHE) $(CROSS_COMPILE)gcc
+AS   = $(CCACHE) $(CROSS_COMPILE)as
 LD   = $(CCACHE) $(CROSS_COMPILE)g++
 OD   = $(CCACHE) $(CROSS_COMPILE)objdump
 SZ   = $(CCACHE) $(CROSS_COMPILE)size
 AR   = $(CCACHE) $(CROSS_COMPILE)ar
+
 
 #c specific options
 ifeq ($(COPT),)
@@ -49,6 +54,12 @@ endif
 ifeq ($(CPPOPT),)
 	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -mcpu=cortex-m4
 endif	
+
+#asm options
+ifeq ($(ASOPT),)
+	ASOPT = 
+endif	
+
 
 #linker options
 ifeq ($(LDOPT),)
