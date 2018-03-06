@@ -1,10 +1,10 @@
-#include <assert.h>
-#include <iostream>
+//#include <assert.h>
+//#include <iostream>
+#include <avr/io.h>
 
 
-int main(int argc, char *argv[]) {
+int main(void) {
 
-  std::cout << "template makefile project \r\n";
   return 0;
 }
 
