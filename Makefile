@@ -4,10 +4,11 @@ endif
 #DISABLE_ASSERTS		= yes
 #GPROF_EN = yes
 #LST_FILE_GEN = yes
-#DMP_FILE_GEN = yes
-#ASM_LST_FILE_GEN = yes
-#MAP_FILE_GEN     = yes
+DMP_FILE_GEN = yes
+ASM_LST_FILE_GEN = yes
+MAP_FILE_GEN     = yes
 #USE_VERBOSE_COMPILE = yes
+CROSS_COMPILE=/usr/bin/avr-
 
 #include dirs
 INCDIR = .\
@@ -46,17 +47,17 @@ AR   = $(CCACHE) $(CROSS_COMPILE)ar
 
 #c specific options
 ifeq ($(COPT),)
-	COPT = -O0 -g3 -Wall -fmessage-length=0
+	COPT = -O0 -g3 -Wall -fmessage-length=0 -mmcu=avr4 -D__AVR_ATmega8__
 endif	
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0
+	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -mmcu=avr4 -D__AVR_ATmega8__
 endif	
 
 #asm options
 ifeq ($(ASOPT),)
-	ASOPT = 
+	ASOPT = -mmcu=avr4 -D__AVR_ATmega8__
 endif	
 
 
