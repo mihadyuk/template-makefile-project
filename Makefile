@@ -3,10 +3,10 @@ ifeq ($(PROJECT),)
 endif
 #DISABLE_ASSERTS		= yes
 #GPROF_EN = yes
-#LST_FILE_GEN = yes
-#DMP_FILE_GEN = yes
-#ASM_LST_FILE_GEN = yes
-#MAP_FILE_GEN     = yes
+LST_FILE_GEN = yes
+DMP_FILE_GEN = yes
+ASM_LST_FILE_GEN = yes
+MAP_FILE_GEN     = yes
 #USE_VERBOSE_COMPILE = yes
 
 #include dirs
@@ -41,17 +41,17 @@ AR   = $(CCACHE) $(CROSS_COMPILE)ar
 
 #c specific options
 ifeq ($(COPT),)
-	COPT = -O0 -g3 -Wall -fmessage-length=0
+	COPT = -O0 -g3 -Wall -fmessage-length=0 -mcpu=cortex-m4
 endif	
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0
+	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -mcpu=cortex-m4
 endif	
 
 #linker options
 ifeq ($(LDOPT),)
-	LDOPT =
+	LDOPT = -mcpu=cortex-m4
 endif	
 	 
 
