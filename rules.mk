@@ -40,11 +40,12 @@ ifeq ($(LST_FILE_GEN),yes)
     OUTFILES += $(BUILDDIR)/$(PROJECT).list
 endif           
 
-SRCPATHS = $(sort $(dir $(CSRC)) $(dir $(CPPSRC)))
+SRCPATHS = $(sort $(dir $(CSRC)) $(dir $(CPPSRC)) $(dir $(ASSRC)))
 # Object files groups
 COBJS   = $(addprefix $(OBJDIR)/, $(notdir $(CSRC:.c=.o)))
 CPPOBJS = $(addprefix $(OBJDIR)/, $(notdir $(CPPSRC:.cpp=.o)))
-OBJS    = $(COBJS) $(CPPOBJS)
+ASOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(ASSRC:.S=.o)))
+OBJS    = $(COBJS) $(CPPOBJS) $(ASOBJS)
 #lib dir
 #LIBDIR  = . #/usr/lib
 LIBS    = $(addprefix -l, $(ULIBS))
@@ -57,6 +58,7 @@ LLIBDIR   = $(patsubst %,-L%,$(LIBDIR))
 # Generate dependency information
 COPT   += -MD -MP -MF .dep/$(@F).d
 CPPOPT += -MD -MP -MF .dep/$(@F).d
+ASOPT  += -MD -MP -MF .dep/$(@F).d
 
 
 # Paths where to search for sources
@@ -78,6 +80,8 @@ $(OBJS): | $(BUILDDIR) $(OBJDIR) $(LSTDIR)
 
 $(BUILDDIR):
 ifneq ($(USE_VERBOSE_COMPILE),yes)
+	@echo asm Options
+	@echo $(AS) -c $(ASOPT) -I. $(IINCDIR)
 	@echo C compiler Options
 	@echo $(CC) -c $(COPT) -I. $(IINCDIR)
 	@echo C++ compiler options
@@ -109,6 +113,15 @@ ifeq ($(USE_VERBOSE_COMPILE),yes)
 else
 	@echo Compiling $(<F) 
 	@$(CC) -c $(COPT) -I. $(IINCDIR) $< -o $@
+endif
+
+$(ASOBJS) : $(OBJDIR)/%.o : %.S Makefile
+ifeq ($(USE_VERBOSE_COMPILE),yes)
+	@echo 
+	$(AS) -c $(ASOPT) -I. $(IINCDIR) $< -o $@
+else
+	@echo Compiling $(<F) 
+	@$(AS) -c $(ASOPT) -I. $(IINCDIR) $< -o $@
 endif
 
 %.elf: $(OBJS)
