@@ -81,11 +81,11 @@ $(OBJS): | $(BUILDDIR) $(OBJDIR) $(LSTDIR)
 $(BUILDDIR):
 ifneq ($(USE_VERBOSE_COMPILE),yes)
 	@echo asm Options
-	@echo $(AS) -c $(ASOPT) -I. $(IINCDIR)
+	@echo $(AS) -c $(ASOPT) $(IINCDIR)
 	@echo C compiler Options
-	@echo $(CC) -c $(COPT) -I. $(IINCDIR)
+	@echo $(CC) -c $(COPT) $(IINCDIR)
 	@echo C++ compiler options
-	@echo $(CPPC) -c $(CPPOPT) -I. $(IINCDIR)
+	@echo $(CPPC) -c $(CPPOPT) $(IINCDIR)
 	@echo Linker options
 	@echo $(LD) $(LDOPT) -L$(LIBDIR) $(LIBS) 
 endif
@@ -100,28 +100,28 @@ $(LSTDIR):
 $(CPPOBJS) : $(OBJDIR)/%.o : %.cpp Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo 
-	$(CPPC) -c $(CPPOPT) -I. $(IINCDIR) $< -o $@
+	$(CPPC) -c $(CPPOPT) $(IINCDIR) $< -o $@
 else
 	@echo Compiling $(<F) 
-	@$(CPPC) -c $(CPPOPT) -I. $(IINCDIR) $< -o $@
+	@$(CPPC) -c $(CPPOPT) $(IINCDIR) $< -o $@
 endif
 
 $(COBJS) : $(OBJDIR)/%.o : %.c Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo 
-	$(CC) -c $(COPT) -I. $(IINCDIR) $< -o $@
+	$(CC) -c $(COPT) $(IINCDIR) $< -o $@
 else
 	@echo Compiling $(<F) 
-	@$(CC) -c $(COPT) -I. $(IINCDIR) $< -o $@
+	@$(CC) -c $(COPT) $(IINCDIR) $< -o $@
 endif
 
 $(ASOBJS) : $(OBJDIR)/%.o : %.S Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo 
-	$(AS) -c $(ASOPT) -I. $(IINCDIR) $< -o $@
+	$(AS) -c $(ASOPT) $(IINCDIR) $< -o $@
 else
 	@echo Compiling $(<F) 
-	@$(AS) -c $(ASOPT) -I. $(IINCDIR) $< -o $@
+	@$(AS) -c $(ASOPT) $(IINCDIR) $< -o $@
 endif
 
 %.elf: $(OBJS)
