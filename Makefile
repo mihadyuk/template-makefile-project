@@ -44,7 +44,7 @@ endif
 
 CPPC = $(CCACHE) $(CROSS_COMPILE)g++
 CC   = $(CCACHE) $(CROSS_COMPILE)gcc
-AS   = $(CCACHE) $(CROSS_COMPILE)as
+AS   = $(CCACHE) $(CROSS_COMPILE)g++
 LD   = $(CCACHE) $(CROSS_COMPILE)g++
 OD   = $(CCACHE) $(CROSS_COMPILE)objdump
 SZ   = $(CCACHE) $(CROSS_COMPILE)size
@@ -63,7 +63,7 @@ endif
 
 #asm options
 ifeq ($(ASOPT),)
-	ASOPT = 
+	ASOPT = $(CPPOPT) -D__NO_SYSTEM_INIT
 endif	
 
 

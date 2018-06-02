@@ -58,8 +58,8 @@ LLIBDIR   = $(patsubst %,-L%,$(LIBDIR))
 # Generate dependency information
 COPT   += -MD -MP -MF .dep/$(@F).d
 CPPOPT += -MD -MP -MF .dep/$(@F).d
-#ASOPT  += -MD -MP -MF .dep/$(@F).d
-ASOPT  += --MD .dep/$(@F).d
+ASOPT  += -MD -MP -MF .dep/$(@F).d
+#ASOPT  += --MD .dep/$(@F).d
 
 
 # Paths where to search for sources
@@ -119,10 +119,10 @@ endif
 $(ASOBJS) : $(OBJDIR)/%.o : %.S Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo 
-	$(AS) -c $(ASOPT) $(IINCDIR) $< -o $@
+	$(CPPC) -c $(ASOPT) $(IINCDIR) $< -o $@
 else
 	@echo Compiling $(<F) 
-	@$(AS) -c $(ASOPT) $(IINCDIR) $< -o $@
+	@$(CPPC) -c $(ASOPT) $(IINCDIR) $< -o $@
 endif
 
 %.elf: $(OBJS)
