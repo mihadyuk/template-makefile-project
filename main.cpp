@@ -2,7 +2,6 @@
 //#include <iostream>
 //#include <stdio.h>
 
-//extern const char *test_extern;
 
 int main(void) {
 
