@@ -30,7 +30,7 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
    ---------------------------------------------------------------------------*/
-   #define __NO_SYSTEM_INIT 1
+   #define __NO_SYSTEM_INIT
 	.syntax	unified
 	.arch	armv7e-m
 

@@ -53,12 +53,12 @@ AR   = $(CCACHE) $(CROSS_COMPILE)ar
 
 #c specific options
 ifeq ($(COPT),)
-	COPT = -O0 -g3 -Wall -fmessage-length=0 -mcpu=$(MCPU) -D__NO_SYSTEM_INIT -ffunction-sections -fdata-sections
+	COPT = -O0 -g3 -Wall -fmessage-length=0 -mcpu=$(MCPU)
 endif	
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -mcpu=$(MCPU) -D__NO_SYSTEM_INIT -ffunction-sections -fdata-sections
+	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -mcpu=$(MCPU)
 endif	
 
 #asm options
