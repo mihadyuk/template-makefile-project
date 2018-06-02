@@ -13,7 +13,7 @@ MCPU=cortex-m4
 DMP_FILE_GEN = yes
 ASM_LST_FILE_GEN = yes
 MAP_FILE_GEN     = yes
-USE_VERBOSE_COMPILE = yes
+#USE_VERBOSE_COMPILE = yes
 
 #include dirs
 INCDIR = .\
