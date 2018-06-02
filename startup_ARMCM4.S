@@ -4,7 +4,7 @@
  * Version: V2.0
  * Date: 16 August 2013
  *
-/* Copyright (c) 2011 - 2013 ARM LIMITED
+ Copyright (c) 2011 - 2013 ARM LIMITED
 
    All rights reserved.
    Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,6 @@
    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
    POSSIBILITY OF SUCH DAMAGE.
    ---------------------------------------------------------------------------*/
-   #define __NO_SYSTEM_INIT
 	.syntax	unified
 	.arch	armv7e-m
 
@@ -217,7 +216,7 @@ Reset_Handler:
 #endif /* __STARTUP_CLEAR_BSS_MULTIPLE || __STARTUP_CLEAR_BSS */
 
 #ifndef __NO_SYSTEM_INIT
-	//bl	SystemInit
+	bl	SystemInit
 #endif
 
 #ifndef __START
