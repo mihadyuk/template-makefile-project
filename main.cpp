@@ -1,12 +1,12 @@
-#include <assert.h>
-#include <iostream>
-#include <stdio.h>
+//#include <assert.h>
+//#include <iostream>
+//#include <stdio.h>
 
-extern const char *test_extern;
+//extern const char *test_extern;
 
-int main(int argc, char *argv[]) {
+int main(void) {
 
-  printf("test: %s \r\n", test_extern);
+  //printf("test: %s \r\n", test_extern);
   //std::cout << "template makefile project \r\n";
   return 0;
 }

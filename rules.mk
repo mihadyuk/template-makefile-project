@@ -58,7 +58,8 @@ LLIBDIR   = $(patsubst %,-L%,$(LIBDIR))
 # Generate dependency information
 COPT   += -MD -MP -MF .dep/$(@F).d
 CPPOPT += -MD -MP -MF .dep/$(@F).d
-ASOPT  += -MD -MP -MF .dep/$(@F).d
+#ASOPT  += -MD -MP -MF .dep/$(@F).d
+ASOPT  += --MD .dep/$(@F).d
 
 
 # Paths where to search for sources

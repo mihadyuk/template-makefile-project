@@ -1,14 +1,19 @@
 ifeq ($(PROJECT),)
 	PROJECT	= exec-module-name
 endif
-CROSS_COMPILE=/usr/bin/arm-none-eabi-
+CROSS_COMPILE=~/soft/gcc-arm-none-eabi/bin/arm-none-eabi-
+#STARTUP_FILE=~/soft/gcc-arm-none-eabi/share/gcc-arm-none-eabi/samples/startup/startup_ARMCM4.S
+#STARTUP_FILE=startup_ARMCM4.S
+#LDSCRIPTS=-L~/soft/gcc-arm-none-eabi/share/gcc-arm-none-eabi/samples/ldscripts -T gcc.ld
+LDSCRIPTS=-L. -T gcc.ld
+MCPU=cortex-m4
 #DISABLE_ASSERTS		= yes
 #GPROF_EN = yes
 #LST_FILE_GEN = yes
 DMP_FILE_GEN = yes
 ASM_LST_FILE_GEN = yes
 MAP_FILE_GEN     = yes
-#USE_VERBOSE_COMPILE = yes
+USE_VERBOSE_COMPILE = yes
 
 #include dirs
 INCDIR = .\
@@ -24,6 +29,7 @@ CPPSRC = $(wildcard ./*.cpp) \
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
+
 
 ifeq ($(LIBDIR),)
     LIBDIR  = .
@@ -47,12 +53,12 @@ AR   = $(CCACHE) $(CROSS_COMPILE)ar
 
 #c specific options
 ifeq ($(COPT),)
-	COPT = -O0 -g3 -Wall -fmessage-length=0 -mcpu=cortex-m4
+	COPT = -O0 -g3 -Wall -fmessage-length=0 -mcpu=$(MCPU) -D__NO_SYSTEM_INIT -ffunction-sections -fdata-sections
 endif	
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -mcpu=cortex-m4
+	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -mcpu=$(MCPU) -D__NO_SYSTEM_INIT -ffunction-sections -fdata-sections
 endif	
 
 #asm options
@@ -63,7 +69,7 @@ endif
 
 #linker options
 ifeq ($(LDOPT),)
-	LDOPT = -mcpu=cortex-m4
+	LDOPT = -mcpu=$(MCPU) $(LDSCRIPTS)
 endif	
 	 
 
