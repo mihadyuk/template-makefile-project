@@ -8,7 +8,8 @@ ifeq ($(MAP_FILE_GEN),yes)
 	LDOPT += -Wl,-Map=$(BUILDDIR)/$(PROJECT).map
 endif	
 ifeq ($(ODFLAGS),)
-	ODFLAGS	  = -x --syms
+	ODFLAGS	  = -x --syms --demangle --disassemble-all --line-numbers
+	ODFLAGS += --disassemble-zeroes
 endif
 
 ifeq ($(GPROF_EN),yes)
