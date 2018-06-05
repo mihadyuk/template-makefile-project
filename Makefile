@@ -1,7 +1,13 @@
 ifeq ($(PROJECT),)
 	PROJECT	= exec-module-name
 endif
+
+ifeq ($(OS),Windows_NT)
+CROSS_COMPILE=/cygdrive/c/gcc-arm-none-eabi/bin/arm-none-eabi-
+else
 CROSS_COMPILE=~/soft/gcc-arm-none-eabi/bin/arm-none-eabi-
+endif
+
 #STARTUP_FILE=~/soft/gcc-arm-none-eabi/share/gcc-arm-none-eabi/samples/startup/startup_ARMCM4.S
 #STARTUP_FILE=startup_ARMCM4.S
 #LDSCRIPTS=-L~/soft/gcc-arm-none-eabi/share/gcc-arm-none-eabi/samples/ldscripts -T gcc.ld
