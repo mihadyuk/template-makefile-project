@@ -22,6 +22,7 @@ DMP_FILE_GEN = yes
 ASM_LST_FILE_GEN = yes
 MAP_FILE_GEN     = yes
 #USE_VERBOSE_COMPILE = yes
+USE_LTO = yes
 
 #include dirs
 INCDIR = .\
@@ -58,15 +59,18 @@ OD   = $(CCACHE) $(CROSS_COMPILE)objdump
 SZ   = $(CCACHE) $(CROSS_COMPILE)size
 AR   = $(CCACHE) $(CROSS_COMPILE)ar
 
+ifeq ($(USE_LTO),yes)
+	LTO = -flto
+endif
 
 #c specific options
 ifeq ($(COPT),)
-	COPT = -O0 -g3 -Wall -fmessage-length=0 -mcpu=$(MCPU)
+	COPT = -O2 -g3 -Wall -fmessage-length=0 -mcpu=$(MCPU) $(LTO)
 endif	
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -mcpu=$(MCPU)
+	CPPOPT = -std=c++0x -O2 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -mcpu=$(MCPU) $(LTO)
 endif	
 
 #asm options
@@ -77,7 +81,7 @@ endif
 
 #linker options
 ifeq ($(LDOPT),)
-	LDOPT = -mcpu=$(MCPU) $(LDSCRIPTS)
+	LDOPT = -mcpu=$(MCPU) $(LDSCRIPTS) $(LTO)
 endif	
 	 
 
