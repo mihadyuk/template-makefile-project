@@ -2,10 +2,12 @@ ifeq ($(PROJECT),)
 	PROJECT	= exec-module-name
 endif
 
+ifeq ($(CROSS_COMPILE),)
 ifeq ($(OS),Windows_NT)
 CROSS_COMPILE=/cygdrive/c/gcc-arm-none-eabi/bin/arm-none-eabi-
 else
 CROSS_COMPILE=~/soft/gcc-arm-none-eabi/bin/arm-none-eabi-
+endif
 endif
 
 #STARTUP_FILE=~/soft/gcc-arm-none-eabi/share/gcc-arm-none-eabi/samples/startup/startup_ARMCM4.S
