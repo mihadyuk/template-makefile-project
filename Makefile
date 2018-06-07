@@ -22,7 +22,7 @@ DMP_FILE_GEN = yes
 ASM_LST_FILE_GEN = yes
 MAP_FILE_GEN     = yes
 #USE_VERBOSE_COMPILE = yes
-USE_LTO = yes
+#USE_LTO = yes
 
 #include dirs
 INCDIR = .\
@@ -81,7 +81,10 @@ endif
 
 #linker options
 ifeq ($(LDOPT),)
-	LDOPT = -mcpu=$(MCPU) $(LDSCRIPTS) $(LTO)
+	LDOPT = -mcpu=$(MCPU) $(LDSCRIPTS) $(LTO) 
+	LDOPT += --specs=rdimon.specs  
+	#LDOPT += --specs=nosys.specs  
+	LDOPT += --specs=nano.specs
 endif	
 	 
 
