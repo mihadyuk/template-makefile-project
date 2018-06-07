@@ -14,14 +14,14 @@ struct Test {
 
 Test test;
 //Test test2 = {4};
-
+volatile int32_t *a = (volatile int32_t *)0x10000100UL;
 #pragma GCC push_options
-#pragma GCC optimize ("O0")
+//#pragma GCC optimize ("O2")
 int main(void) {
 
   //printf("test: %s \r\n", test_extern);
   //std::cout << "template makefile project \r\n";
-  test._a = test._a + unit_get()->m_int32;
+  *a = test._a + unit_get()->m_int32;
   return 0;
 }
 #pragma GCC pop_options
