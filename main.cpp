@@ -16,16 +16,19 @@ struct Test {
 Test test;
 //Test test2 = {4};
 int32_t a;
-#pragma GCC push_options
+//#pragma GCC push_options
 //#pragma GCC optimize ("O2")
+volatile char buf[100];
 int main(void) {
 
   //printf("test: %s \r\n", test_extern);
   //std::cout << "template makefile project \r\n";
   a = test._a + unit_get()->m_int32;
-  printf("%ld", a);
+  //printf("%ld", a);
+  //printf("text");
+  snprintf((char *)buf, sizeof(buf), "%ld", a);
   return 0;
 }
-#pragma GCC pop_options
+//#pragma GCC pop_options
 
 
