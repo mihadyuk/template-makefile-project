@@ -14,7 +14,7 @@ endif
 #STARTUP_FILE=startup_ARMCM4.S
 #LDSCRIPTS=-L~/soft/gcc-arm-none-eabi/share/gcc-arm-none-eabi/samples/ldscripts -T gcc.ld
 LDSCRIPTS=-L. -T gcc.ld
-MCPU=cortex-m4
+MCPU = -mcpu=cortex-m4 -mfloat-abi=softfp -mthumb -mfpu=fpv4-sp-d16
 #DISABLE_ASSERTS		= yes
 #GPROF_EN = yes
 #LST_FILE_GEN = yes
@@ -22,7 +22,7 @@ DMP_FILE_GEN = yes
 ASM_LST_FILE_GEN = yes
 MAP_FILE_GEN     = yes
 #USE_VERBOSE_COMPILE = yes
-#USE_LTO = yes
+USE_LTO = yes
 
 #include dirs
 INCDIR = .\
@@ -47,7 +47,7 @@ endif
 #used libs
 #ULIBS = config++ pthread
 ifeq ($(ULIBS),)
-	ULIBS =
+	ULIBS = 
 endif	
 
 
@@ -65,12 +65,16 @@ endif
 
 #c specific options
 ifeq ($(COPT),)
-	COPT = -O2 -g3 -Wall -fmessage-length=0 -mcpu=$(MCPU) $(LTO)
+	COPT = -O2 -g3 -Wall -fmessage-length=0 $(MCPU) $(LTO)
+	COPT += --specs=nano.specs -u _printf_float
+	#COPT += --specs=rdimon.specs 
 endif	
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O2 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -mcpu=$(MCPU) $(LTO)
+	CPPOPT = -std=c++0x -O2 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions $(MCPU) $(LTO)
+	CPPOPT += --specs=nano.specs -u _printf_float
+	#CPPOPT += --specs=rdimon.specs
 endif	
 
 #asm options
@@ -81,10 +85,10 @@ endif
 
 #linker options
 ifeq ($(LDOPT),)
-	LDOPT = -mcpu=$(MCPU) $(LDSCRIPTS) $(LTO) 
+	LDOPT = $(MCPU) $(LDSCRIPTS) $(LTO) 
 	LDOPT += --specs=rdimon.specs  
-	#LDOPT += --specs=nosys.specs  
-	LDOPT += --specs=nano.specs
+	#LDOPT += --specs=nosys.specs
+	LDOPT += --specs=nano.specs -u _printf_float
 endif	
 	 
 
