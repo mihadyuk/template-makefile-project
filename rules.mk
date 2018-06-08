@@ -5,7 +5,7 @@ ifeq ($(ASM_LST_FILE_GEN),yes)
 	CPPOPT += -Wa,-almsh=$(LSTDIR)/$(notdir $(<:.cpp=.lst))
 endif	
 ifeq ($(MAP_FILE_GEN),yes)	
-	LDOPT += -Wl,-Map=$(BUILDDIR)/$(PROJECT).map
+	LDOPT += -Wl,-Map=$(BUILDDIR)/$(PROJECT).map -Wl,-gc-sections
 endif	
 ifeq ($(ODFLAGS),)
 	ODFLAGS	  = -x --syms --demangle --disassemble-all --line-numbers
