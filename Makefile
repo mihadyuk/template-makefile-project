@@ -79,7 +79,7 @@ endif
 
 #asm options
 ifeq ($(ASOPT),)
-	ASOPT = $(CPPOPT) -D__NO_SYSTEM_INIT
+	ASOPT = $(MCPU) -D__NO_SYSTEM_INIT
 endif	
 
 
