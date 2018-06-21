@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+//int32_t g_int32;
+
 #if 0
 #ifdef __cplusplus
 extern "C" {

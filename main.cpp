@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include "unit1.h"
+#include "unit2.h"
+#include "unit2.h"
 
 
 struct Test {
@@ -20,12 +22,13 @@ int32_t a;
 //#pragma GCC optimize ("O2")
 volatile char buf[100];
 int main(void) {
+  g_int32 = 9;	
 
   //printf("test: %s \r\n", test_extern);
   //std::cout << "template makefile project \r\n";
   a = test._a + unit_get()->m_int32;
   //printf("%ld", a);
-  //printf("text");
+  printf("text");
   snprintf((char *)buf, sizeof(buf), "%ld", a);
   return 0;
 }
