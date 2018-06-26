@@ -11,15 +11,15 @@ endif
 
 #include dirs
 INCDIR = .\
-         src \
+         exceptions \
 
 # C source files
-CSRC = $(wildcard src/*.c) \
-       $(wildcard ./*.c) \
+CSRC = $(wildcard ./*.c) \
+       $(wildcard exceptions/*.c) \
 
 # CPP source files
 CPPSRC = $(wildcard ./*.cpp) \
-         $(wildcard src/*.cpp) \
+         $(wildcard exceptions/*.cpp) \
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
