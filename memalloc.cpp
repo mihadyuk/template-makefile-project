@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include "config.h"
+
+#if defined (OVERRIDE_NEW_DELETE)
 
 static void *my_alloc(size_t size){
       void *ptr = malloc(size);
@@ -32,3 +35,5 @@ void operator delete[](void *ptr) {
      printf("delete[]: ");
      my_free(ptr);
 }
+
+#endif
