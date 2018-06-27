@@ -33,9 +33,11 @@ int main(int argc, char *argv[]) {
   uint8_t *buffer = (uint8_t *)malloc(sizeof(Test));
 
   //*buffer = Test(10);
-  *(Test *)buffer = Test(10);
-  //new (buffer) Test(10);
-  ((Test *)buffer)->~Test();
+  //*(Test *)buffer = Test(10);
+  Test *ptr = new (buffer) Test(10);
+  assert((uint8_t *)ptr == buffer);
+  //((Test *)buffer)->~Test();
+  ptr->~Test();
 
   free(buffer);
 
