@@ -14,8 +14,8 @@ INCDIR = .\
          exceptions \
 
 # C source files
-CSRC = $(wildcard ./*.c) \
-       $(wildcard exceptions/*.c) \
+CSRC = $(wildcard ./*.c)
+
 
 # CPP source files
 CPPSRC = $(wildcard ./*.cpp) \
