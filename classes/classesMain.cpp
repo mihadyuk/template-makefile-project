@@ -14,6 +14,7 @@ struct Test {
     int16_t m_int16;
 
     Test() = default;
+#if 0
     Test(volatile const Test &src) {
         m_int32  = src.m_int32;
         m_uint32 = src.m_uint32;
@@ -28,6 +29,7 @@ struct Test {
         m_int16  = src.m_int16;
         return *this;
     }
+#endif
 };
 
 volatile Test va;
@@ -41,8 +43,8 @@ void classesMain() {
     Base d(b);
 
     b = a;
-    Test test(va);
-    //test = va;
+    Test test;
+    test = const_cast<Test&>(va);
 }
 
 
