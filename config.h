@@ -9,7 +9,7 @@
 #define CONFIG_H_
 
 #define OVERRIDE_NEW_DELETE
-
+#define DEFAULT_MEMALLOC_LOG_ENABLED    true
 
 
 
