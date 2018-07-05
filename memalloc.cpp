@@ -2,6 +2,17 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "config.h"
+#include "memalloc.h"
+
+static bool g_logEnabled = DEFAULT_MEMALLOC_LOG_ENABLED;
+
+bool memalloc_isLogEnabled() {
+    return g_logEnabled;
+}
+
+void memalloc_logEnable(bool enabled) {
+    g_logEnabled = enabled;
+}
 
 #if defined (OVERRIDE_NEW_DELETE)
 
