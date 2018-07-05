@@ -8,6 +8,10 @@
 #ifndef MEMALLOC_H_
 #define MEMALLOC_H_
 
+#if !defined (DEFAULT_MEMALLOC_LOG_ENABLED)
+#define DEFAULT_MEMALLOC_LOG_ENABLED true
+#endif
+
 bool memalloc_isLogEnabled();
 void memalloc_logEnable(bool enabled);
 
