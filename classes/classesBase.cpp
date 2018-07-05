@@ -13,11 +13,11 @@ Base::Base() {
 }
 
 Base::Base(const Base &src) {
-    printf("Base: copy ctor %p \r\n", this);
+    printf("Base: copy ctor %p = %p \r\n", this, &src);
 }
 
 Base::Base(const Base &&src) {
-    printf("Base: move ctor %p \r\n", this);
+    printf("Base: move ctor %p = %p \r\n", this, &src);
 }
 
 Base::~Base() {
@@ -25,12 +25,12 @@ Base::~Base() {
 }
 
 Base& Base::operator=(const Base &src) {
-    printf("Base: %p = %p \r\n", &src, this);
+    printf("Base: %p = %p \r\n", this, &src);
     return *this;
 }
 
 Base& Base::operator=(const Base &&src) {
-    printf("Base: move %p = %p \r\n", &src, this);
+    printf("Base: move %p = %p \r\n", this, &src);
     return *this;
 }
 
