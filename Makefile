@@ -12,7 +12,8 @@ endif
 #include dirs
 INCDIR = .\
          exceptions \
-         mem_alloc
+         mem_alloc \
+         classes
 
 # C source files
 CSRC = $(wildcard ./*.c)
@@ -21,7 +22,8 @@ CSRC = $(wildcard ./*.c)
 # CPP source files
 CPPSRC = $(wildcard ./*.cpp) \
          $(wildcard exceptions/*.cpp) \
-         $(wildcard mem_alloc/*.cpp)
+         $(wildcard mem_alloc/*.cpp) \
+         $(wildcard classes/*.cpp)
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
