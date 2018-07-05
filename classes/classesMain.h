@@ -2,7 +2,7 @@
  * classesMain.h
  *
  *  Created on: Jul 5, 2018
- *      Author:
+ *      Author: Andrey
  */
 
 #ifndef CLASSES_CLASSESMAIN_H_

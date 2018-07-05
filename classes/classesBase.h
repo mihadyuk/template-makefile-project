@@ -2,7 +2,7 @@
  * classesBase.h
  *
  *  Created on: Jul 5, 2018
- *      Author: mihadyuk
+ *      Author: Andrey
  */
 
 #ifndef CLASSES_CLASSESBASE_H_

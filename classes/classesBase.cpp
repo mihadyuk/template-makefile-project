@@ -2,7 +2,7 @@
  * classesBase.cpp
  *
  *  Created on: Jul 5, 2018
- *      Author: amihadyuk
+ *      Author: Andrey
  */
 
 #include "classesBase.h"

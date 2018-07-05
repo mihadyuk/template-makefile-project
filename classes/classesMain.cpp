@@ -2,7 +2,7 @@
  * classesMain.cpp
  *
  *  Created on: Jul 5, 2018
- *      Author:
+ *      Author: Andrey
  */
 #include "classesMain.h"
 #include "classesBase.h"

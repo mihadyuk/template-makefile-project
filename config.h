@@ -2,7 +2,7 @@
  * config.h
  *
  *  Created on: Jun 26, 2018
- *  Author:
+ *  Author: Andrey
  */
 
 #ifndef CONFIG_H_

@@ -2,7 +2,7 @@
  * memalloc.h
  *
  *  Created on: Jul 5, 2018
- *      Author: amihadyuk
+ *      Author: Andrey
  */
 
 #ifndef MEMALLOC_H_
