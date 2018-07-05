@@ -7,13 +7,13 @@
 
 static void *my_alloc(size_t size){
       void *ptr = malloc(size);
-      printf("alloc: size: %lu, p: %p \r\n", size, ptr);
+      printf("p: %p, size: %lu \r\n", ptr, size);
       return ptr;
 }
 
 static void my_free(void *ptr) {
       free(ptr);
-      printf("free: %p\r\n", ptr);
+      printf("p: %p\r\n", ptr);
 }
 
 void* operator new (size_t size){
@@ -27,12 +27,12 @@ void* operator new[] (size_t size){
 }
 
 void operator delete(void *ptr) {
-     printf("delete: ");
+     printf("delete ");
      my_free(ptr);
 }
 
 void operator delete[](void *ptr) {
-     printf("delete[]: ");
+     printf("delete[] ");
      my_free(ptr);
 }
 
