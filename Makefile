@@ -52,12 +52,12 @@ AR   = $(CCACHE) $(CROSS_COMPILE)ar
 
 #c specific options
 ifeq ($(COPT),)
-	COPT = -O0 -g3 -Wall -fmessage-length=0
+	COPT = -O0 -g3 -Wall -fmessage-length=0 -pedantic
 endif	
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0
+	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -pedantic
 endif	
 
 #asm options
