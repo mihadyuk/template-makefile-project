@@ -65,14 +65,14 @@ endif
 
 #c specific options
 ifeq ($(COPT),)
-	COPT = -O2 -g3 -Wall -fmessage-length=0 -ffunction-sections -fdata-sections $(MCPU) $(LTO)
+	COPT = -O2 -g3 -Wall -fmessage-length=0 -ffunction-sections -fdata-sections $(MCPU) $(LTO) -pedantic
 	COPT += --specs=nano.specs -u _printf_float
 	#COPT += --specs=rdimon.specs 
 endif	
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O2 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections $(MCPU) $(LTO)
+	CPPOPT = -std=c++0x -O2 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -pedantic $(MCPU) $(LTO)
 	CPPOPT += --specs=nano.specs -u _printf_float
 	#CPPOPT += --specs=rdimon.specs
 endif	
