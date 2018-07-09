@@ -23,7 +23,7 @@ enum class TestEnum : uint32_t {
 };
 
 constexpr TestEnum operator|(const TestEnum &val1, const TestEnum &val2) {
-    return (TestEnum)((uint32_t)val1 | (uint32_t)val2);
+    return static_cast<TestEnum>(static_cast<uint32_t>(val1) | static_cast<uint32_t>(val2));
 }
 
 
