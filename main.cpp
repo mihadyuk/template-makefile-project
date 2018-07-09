@@ -7,6 +7,11 @@
 #include "unit2.h"
 #include "unit2.h"
 
+/*
+ practical guide to bare metal C++
+ https://legacy.gitbook.com/book/arobenko/bare_metal_cpp/details
+
+*/
 
 struct Test {
   int32_t _a;
