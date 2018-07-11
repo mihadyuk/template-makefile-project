@@ -37,14 +37,14 @@ volatile Test va;
 
 void classesMain() {
 
-    Base a;
-    Base b;
+    Base a = "a";
+    Base b = "b";
     Base c = a;
     Base d(b);
 
     b = a;
-    Test test;
-    test = const_cast<Test&>(va);
+    //Test test;
+    //test = const_cast<Test&>(va);
 }
 
 

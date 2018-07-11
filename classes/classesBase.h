@@ -11,12 +11,15 @@
 
 class Base {
 public:
-    Base();
+    Base() = delete;
+    Base(const char *name);
     Base(const Base &src);
     Base(const Base &&src);
     virtual ~Base();
     Base& operator=(const Base &src);
     Base& operator=(const Base &&src);
+private:
+    const char *m_name = nullptr;
 };
 
 #endif /* CLASSES_CLASSESBASE_H_ */

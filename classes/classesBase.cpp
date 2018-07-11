@@ -8,29 +8,35 @@
 #include "classesBase.h"
 #include <stdio.h>
 
-Base::Base() {
-    printf("Base: ctor %p \r\n", (void *)this);
+Base::Base(const char *name) : m_name(name) {
+    printf("Base \"%s\": ctor %p \r\n", m_name, (void *)this);
 }
 
-Base::Base(const Base &src) {
-    printf("Base: copy ctor %p = %p \r\n", (void *)this, (void *)&src);
+Base::Base(const Base &src) : m_name(src.m_name) {
+    printf("Base: copy ctor \"%s\" %p = %p \r\n", m_name, (void *)this, (void *)&src);
 }
 
-Base::Base(const Base &&src) {
-    printf("Base: move ctor %p = %p \r\n", (void *)this, (void *)&src);
+Base::Base(const Base &&src) : m_name(src.m_name) {
+    printf("Base: move ctor \"%s\" %p = %p \r\n", m_name, (void *)this, (void *)&src);
 }
 
 Base::~Base() {
-    printf("Base: dtor %p \r\n", (void *)this);
+    printf("Base: dtor \"%s\" %p \r\n", m_name, (void *)this);
 }
 
 Base& Base::operator=(const Base &src) {
-    printf("Base: %p = %p \r\n", (void *)this, (void *)&src);
+    if (this == &src)
+        return *this;
+    m_name = src.m_name;
+    printf("Base: \"%s\" %p = %p \r\n", m_name, (void *)this, (void *)&src);
     return *this;
 }
 
 Base& Base::operator=(const Base &&src) {
-    printf("Base: move %p = %p \r\n", (void *)this, (void *)&src);
+    if (this == &src)
+        return *this;
+    m_name = src.m_name;
+    printf("Base: move \"%s\" %p = %p \r\n", m_name, (void *)this, (void *)&src);
     return *this;
 }
 
