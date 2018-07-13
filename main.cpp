@@ -31,6 +31,55 @@ constexpr TestEnum operator|(const TestEnum &val1, const TestEnum &val2) {
     return static_cast<TestEnum>(static_cast<uint32_t>(val1) | static_cast<uint32_t>(val2));
 }
 
+typedef void (*FUNC_HANDLER)(void *);
+
+static void func0(void *param) {
+    (void)param;
+    printf("func0 %p", param);
+}
+
+static void func1(void *param) {
+    (void)param;
+    printf("func1 %p", param + 1);
+}
+
+static void func2(void *param) {
+    (void)param;
+    printf("func2 %p", param + 2);
+}
+
+static void func3(void *param) {
+    (void)param;
+    printf("func3 %p", param + 3);
+}
+
+static const FUNC_HANDLER g_funcTable[] =
+{
+    func0,
+    func1,
+    func2,
+    func3
+};
+
+static void funcHandler(uint32_t index, void *param) {
+    switch (index) {
+        case 11:
+            func0(param);
+        break;
+        case 1:
+            func1(param);
+        break;
+        case 3:
+            func2(param);
+        break;
+        case 7:
+            func3(param);
+        break;
+        default:
+        break;
+    };
+}
+
 
 //Test test;
 //Test test2 = {4};
@@ -48,8 +97,16 @@ int main(void) {
   //printf("text");
   //snprintf((char *)buf, sizeof(buf), "%ld", a);
 
-  TestEnum a = TestEnum::Val1 | TestEnum::Val2 | TestEnum::Val3;
-  printf("%lu", (uint32_t)a);
+  //TestEnum a = TestEnum::Val1 | TestEnum::Val2 | TestEnum::Val3;
+  //printf("%lu", (uint32_t)a);
+  //for (uint32_t i = 0; i < 2; i++) {
+  //    funcHandler(i, (void *)i);
+      //g_funcTable[i](nullptr);
+  //}
+  uint32_t i = 0;
+  scanf("%lu", &i);
+  funcHandler(i, (void *)i);
+  //g_funcTable[i]((void *)i);
   return 0;
 }
 //#pragma GCC pop_options
