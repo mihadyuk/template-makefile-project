@@ -7,7 +7,7 @@ import shutil
 import os
 import struct
 import hashlib
-import platform
+#import platform
 
 def GenerateArray(tokenFileName, arrayName, arraySizeName, outputFile):
     
@@ -27,10 +27,11 @@ def GenerateArray(tokenFileName, arrayName, arraySizeName, outputFile):
         while len(data) > 0:
             outputFile.write('    ')
             for singleByte in data:
-                if platform.uname().system == 'Windows':
-                    outputFile.write('0x%.2X,' % int(singleByte))
-                else:
-                    outputFile.write('0x%.2X,' % (struct.unpack('B', singleByte)))
+                #if platform.uname()[0] == 'Windows':
+                #    outputFile.write('0x%.2X,' % int(singleByte))
+                #else:
+                #    outputFile.write('0x%.2X,' % (struct.unpack('B', singleByte)))
+                outputFile.write('0x%.2X,' % singleByte)
             outputFile.write('\n')    
             data = f.read(16)
             
