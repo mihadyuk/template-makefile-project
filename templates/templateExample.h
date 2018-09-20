@@ -8,6 +8,7 @@
 #ifndef TEMPLATES_TEMPLATEEXAMPLE_H_
 #define TEMPLATES_TEMPLATEEXAMPLE_H_
 #include <stddef.h>
+#include <assert.h>
 
 template<typename T, size_t arraySize>
 class Array {
@@ -16,18 +17,18 @@ public:
 
     size_t size() const { return arraySize; }
 
-    T& value(size_t index) const {
-        static_assert(index < arraySize, "index is out of range");
+    T& value(size_t index) {
+        assert(index < arraySize);
         return m_array[index];
     }
 
     const T& operator[](size_t index) const {
-        static_assert(index < arraySize, "index is out of range");
+        assert(index < arraySize);
         return m_array[index];
     }
 
     T& operator[](size_t index) {
-        static_assert(index < arraySize, "index is out of range");
+        assert(index < arraySize);
         return m_array[index];
     }
 private:
