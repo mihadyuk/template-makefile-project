@@ -14,7 +14,8 @@ INCDIR = .\
          exceptions \
          mem_alloc \
          classes \
-         aggregateInit
+         aggregateInit \
+         templates
 
 # C source files
 CSRC = $(wildcard ./*.c)
@@ -25,7 +26,8 @@ CPPSRC = $(wildcard ./*.cpp) \
          $(wildcard exceptions/*.cpp) \
          $(wildcard mem_alloc/*.cpp) \
          $(wildcard classes/*.cpp) \
-         $(wildcard aggregateInit/*.cpp)
+         $(wildcard aggregateInit/*.cpp) \
+         $(wildcard templates/*.cpp)
 
 #asm source files
 ASSRC = $(wildcard ./*.S)

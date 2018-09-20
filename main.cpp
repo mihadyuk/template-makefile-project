@@ -5,6 +5,7 @@
 #include "mem_alloc/memallocMain.h"
 #include "classes/classesMain.h"
 #include "aggregateInit/aggregateInitMain.h"
+#include "templatesMain.h"
 
 int main(int argc, char *argv[]) {
 
@@ -12,7 +13,8 @@ int main(int argc, char *argv[]) {
   //exceptionsMain();
   //memallocMain();
   //classesMain();
-  aggregateInitMain();
+  //aggregateInitMain();
+  templatesMain();
   return 0;
 }
 
