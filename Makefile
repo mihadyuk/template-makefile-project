@@ -15,7 +15,8 @@ INCDIR = .\
          mem_alloc \
          classes \
          aggregateInit \
-         templates
+         templates \
+         utilits
 
 # C source files
 CSRC = $(wildcard ./*.c)

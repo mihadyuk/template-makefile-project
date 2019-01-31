@@ -6,6 +6,7 @@
 #include "classes/classesMain.h"
 #include "aggregateInit/aggregateInitMain.h"
 #include "templatesMain.h"
+#include "round.h"
 
 int main(int argc, char *argv[]) {
 
@@ -14,7 +15,8 @@ int main(int argc, char *argv[]) {
   //memallocMain();
   //classesMain();
   //aggregateInitMain();
-  templatesMain();
+  //templatesMain();
+  std::cout << roundToNearestPow2<uint32_t>(1023);
   return 0;
 }
 
