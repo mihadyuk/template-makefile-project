@@ -11,10 +11,22 @@
 #include <stdint.h>
 
 template<typename T>
-T roundToNearestPow2(T val) {
+T roundToLowerPow2(T val) {
     if (val < 2)
         return val;
     val &= ~((1 << (sizeof(T)*8 - 1 - __builtin_clz(val))) - 1);
+    return val;
+}
+
+template<typename T>
+T roundToNearestPow2(T val) {
+    if (val < 2)
+        return val;
+    T lower_digit = 1 << (sizeof(T)*8 - 2 - __builtin_clz(val));
+    if (lower_digit & val)
+        val = lower_digit << 2;
+    else
+        val &= ~((lower_digit << 1) - 1);
     return val;
 }
 

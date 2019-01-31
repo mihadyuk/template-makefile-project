@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
   //classesMain();
   //aggregateInitMain();
   //templatesMain();
-  std::cout << roundToNearestPow2<uint32_t>(1023);
+  std::cout << roundToNearestPow2<uint32_t>(48);
   return 0;
 }
 
