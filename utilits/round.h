@@ -9,6 +9,27 @@
 #define UTILITS_ROUND_H_
 
 #include <stdint.h>
+#include <assert.h>
+
+// not finished yet
+template<typename T>
+T clz(T value) {
+    T retval;
+    switch (sizeof(T)) {
+        case sizeof(uint8_t):
+        case sizeof(uint16_t):
+        case sizeof(uint32_t):
+            retval = __builtin_clz(value);
+        break;
+        case sizeof(uint64_t):
+            retval = __builtin_clzll(value);
+        break;
+        default:
+            assert(false);
+        break;
+    };
+    return retval;
+}
 
 template<typename T>
 T roundToLowerPow2(T val) {
