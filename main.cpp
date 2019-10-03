@@ -7,6 +7,7 @@
 #include "aggregateInit/aggregateInitMain.h"
 #include "templatesMain.h"
 #include "round.h"
+#include "crossRefMain.h"
 
 int main(int argc, char *argv[]) {
 
@@ -16,7 +17,8 @@ int main(int argc, char *argv[]) {
   //classesMain();
   //aggregateInitMain();
   //templatesMain();
-  std::cout << roundToNearestPow2<uint32_t>(48);
+  //std::cout << roundToNearestPow2<uint32_t>(48);
+  crossRefMain();
   return 0;
 }
 
