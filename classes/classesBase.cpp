@@ -16,7 +16,7 @@ Base::Base(const Base &src) : m_name(src.m_name) {
     printf("Base: copy ctor \"%s\" %p = %p \r\n", m_name, (void *)this, (void *)&src);
 }
 
-Base::Base(const Base &&src) : m_name(src.m_name) {
+Base::Base(Base &&src) : m_name(src.m_name) {
     printf("Base: move ctor \"%s\" %p = %p \r\n", m_name, (void *)this, (void *)&src);
 }
 
@@ -32,7 +32,7 @@ Base& Base::operator=(const Base &src) {
     return *this;
 }
 
-Base& Base::operator=(const Base &&src) {
+Base& Base::operator=(Base &&src) {
     if (this == &src)
         return *this;
     m_name = src.m_name;
