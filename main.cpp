@@ -8,6 +8,7 @@
 #include "templatesMain.h"
 #include "round.h"
 #include "crossRefMain.h"
+#include "smartPtrsMain.h"
 
 int main(int argc, char *argv[]) {
 
@@ -18,7 +19,8 @@ int main(int argc, char *argv[]) {
   //aggregateInitMain();
   //templatesMain();
   //std::cout << roundToNearestPow2<uint32_t>(48);
-  crossRefMain();
+  //crossRefMain();
+  smartPtrsMain();
   return 0;
 }
 

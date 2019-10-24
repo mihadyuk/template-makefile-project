@@ -17,7 +17,8 @@ INCDIR = .\
          aggregateInit \
          templates \
          utilits \
-         cross_references
+         cross_references \
+         smart_pointers
 
 # C source files
 CSRC = $(wildcard ./*.c)
@@ -31,7 +32,8 @@ CPPSRC = $(wildcard ./*.cpp) \
          $(wildcard aggregateInit/*.cpp) \
          $(wildcard templates/*.cpp) \
          $(wildcard utilits/*.cpp) \
-         $(wildcard cross_references/*.cpp)
+         $(wildcard cross_references/*.cpp) \
+         $(wildcard smart_pointers/*.cpp)
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
