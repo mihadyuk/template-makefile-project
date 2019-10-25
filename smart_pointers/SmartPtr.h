@@ -19,12 +19,14 @@ public:
     SmartPtr(T *p);
     SmartPtr(const SmartPtr<T> &src);
     SmartPtr(SmartPtr<T> &&src)      = delete;
-    SmartPtr<T>& operator=(const SmartPtr<T> &src) = delete;
+    SmartPtr<T>& operator=(const SmartPtr<T> &src);
     SmartPtr<T>& operator=(SmartPtr<T> &&src)      = delete;
     virtual ~SmartPtr();
 
     uint32_t refCnt() const;
 private:
+    void decrementRefCnt();
+
     T *m_p;
     uint32_t *m_refCnt;
 };
@@ -42,6 +44,20 @@ SmartPtr<T>::SmartPtr(T *p) : m_p(p), m_refCnt(nullptr) {
 }
 
 template <typename T>
+SmartPtr<T>& SmartPtr<T>::operator=(const SmartPtr<T> &src) {
+    if (this == &src)
+        return *this;
+
+    decrementRefCnt();
+
+    m_refCnt = src.m_refCnt;
+    m_p      = src.m_p;
+    if (m_refCnt)
+        *m_refCnt += 1;
+    return *this;
+}
+
+template <typename T>
 SmartPtr<T>::SmartPtr(const SmartPtr<T> &src) : m_p(src.m_p), m_refCnt(src.m_refCnt) {
     if (m_refCnt)
         *m_refCnt += 1;
@@ -49,17 +65,22 @@ SmartPtr<T>::SmartPtr(const SmartPtr<T> &src) : m_p(src.m_p), m_refCnt(src.m_ref
 
 template <typename T>
 SmartPtr<T>::~SmartPtr() {
+    decrementRefCnt();
+}
+
+template <typename T>
+void SmartPtr<T>::decrementRefCnt() {
     if (m_refCnt) {
+        assert(m_p);
+        assert(*m_refCnt > 0);
         (*m_refCnt)--;
-        if (*m_refCnt == 0) {
+        if (*m_refCnt == 0 && m_p) {
 
             delete m_refCnt;
             m_refCnt = nullptr;
 
-            if (m_p) {
-                delete m_p;
-                m_p = nullptr;
-            }
+            delete m_p;
+            m_p = nullptr;
         }
     }
 }
