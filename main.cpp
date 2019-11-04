@@ -9,6 +9,7 @@
 #include "round.h"
 #include "crossRefMain.h"
 #include "smartPtrsMain.h"
+#include "virtualInheritanceMain.h"
 
 int main(int argc, char *argv[]) {
 
@@ -20,7 +21,8 @@ int main(int argc, char *argv[]) {
   //templatesMain();
   //std::cout << roundToNearestPow2<uint32_t>(48);
   //crossRefMain();
-  smartPtrsMain();
+  //smartPtrsMain();
+    virtualInheritanceMain();
   return 0;
 }
 
