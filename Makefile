@@ -67,7 +67,7 @@ endif
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 -pedantic
+	CPPOPT = -std=c++17 -O0 -g3 -Wall -fmessage-length=0 -pedantic
 endif	
 
 #asm options
