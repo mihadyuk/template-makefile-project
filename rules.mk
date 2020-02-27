@@ -48,7 +48,8 @@ ASOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(ASSRC:.S=.o)))
 OBJS    = $(COBJS) $(CPPOBJS) $(ASOBJS)
 #lib dir
 #LIBDIR  = . #/usr/lib
-LIBS    = $(addprefix -l, $(ULIBS))
+#LIBS    = $(addprefix -l, $(ULIBS))
+LIBS    = $(ULIBS)
 
 # Paths
 IINCDIR   = $(patsubst %,-I%,$(INCDIR))
