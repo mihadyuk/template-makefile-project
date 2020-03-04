@@ -19,16 +19,29 @@ public:
 
 private:
     struct ImageDescriptor {
+        ImageDescriptor(const std::vector<cv::KeyPoint>& keypoints, const cv::Mat& descriptors) :
+                    m_keypoints(keypoints),
+                    m_descriptors(descriptors)
+        {}
+
         std::vector<cv::KeyPoint> m_keypoints;
         cv::Mat m_descriptors;
+    };
 
-        ImageDescriptor(const std::vector<cv::KeyPoint>& keypoints, const cv::Mat& descriptors) :
-            m_keypoints(keypoints),
-            m_descriptors(descriptors)
+    struct MatchKeypointsResult {
+        MatchKeypointsResult(const cv::Mat& homography, const std::vector<cv::DMatch>& matches) :
+            m_homography(homography),
+            m_matches(matches)
         {}
+
+        cv::Mat m_homography;
+        std::vector<cv::DMatch> m_matches;
     };
 
     ImageDescriptor detectAndDescribe(const cv::Mat& image);
+
+    MatchKeypointsResult matchKeypoints(const ImageDescriptor& imageA, const ImageDescriptor& imageB,
+                                        float ratio, double treshold);
 };
 
 
