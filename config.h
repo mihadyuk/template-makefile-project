@@ -8,8 +8,8 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-//#define USE_TUTORIAL_STITCHER
-#define USE_ALT_STITCHER
+#define USE_TUTORIAL_STITCHER
+//#define USE_ALT_STITCHER
 
 
 
