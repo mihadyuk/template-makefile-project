@@ -13,6 +13,20 @@
 
 #include "altStitcher.h"
 
+void AltStitcher::stitch(const cv::Mat& imageA, const cv::Mat& imageB, float ratio, double reprojThreshold) {
+
+    auto det_result_a = detectAndDescribe(imageA);
+    auto det_result_b = detectAndDescribe(imageB);
+
+    auto match_result = matchKeypoints(det_result_a, det_result_b, ratio, reprojThreshold);
+
+    if (match_result.m_matches.size() == 0)
+        return;
+
+    // apply a perspective warp to stitch the images together
+    //cv::Mat resulted_image()
+    //cv::warpPerspective(imageA, )
+}
 
 AltStitcher::ImageDescriptor AltStitcher::detectAndDescribe(const cv::Mat& image) {
     // convert the image to grayscale
@@ -30,7 +44,7 @@ AltStitcher::ImageDescriptor AltStitcher::detectAndDescribe(const cv::Mat& image
 }
 
 AltStitcher::MatchKeypointsResult AltStitcher::matchKeypoints(const ImageDescriptor& imageA, const ImageDescriptor& imageB,
-                                                              float ratio, double treshold) {
+                                                              float ratio, double reprojTreshold) {
 
     // compute the raw matches and initialize the list of actual matches
     cv::Ptr<cv::BFMatcher> matcher = cv::BFMatcher::create();
@@ -57,7 +71,7 @@ AltStitcher::MatchKeypointsResult AltStitcher::matchKeypoints(const ImageDescrip
             ptsB.push_back(imageB.m_keypoints[matches[i].trainIdx].pt);
         }
 
-        homography = cv::findHomography(ptsA, ptsB, cv::RANSAC, treshold);
+        homography = cv::findHomography(ptsA, ptsB, cv::RANSAC, reprojTreshold);
     }
 
     return AltStitcher::MatchKeypointsResult(homography, matches);

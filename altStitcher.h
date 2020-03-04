@@ -13,10 +13,12 @@
 /**
  * https://www.pyimagesearch.com/2016/01/25/real-time-panorama-and-image-stitching-with-opencv/
  * https://www.pyimagesearch.com/2016/01/11/opencv-panorama-stitching/
+ *
+ * @TODO implement drawMatches
  * */
 class AltStitcher {
 public:
-
+    void stitch(const cv::Mat& imageA, const cv::Mat& imageB, float ratio=0.75, double reprojThreshold = 4.0);
 private:
     struct ImageDescriptor {
         ImageDescriptor(const std::vector<cv::KeyPoint>& keypoints, const cv::Mat& descriptors) :
@@ -41,7 +43,7 @@ private:
     ImageDescriptor detectAndDescribe(const cv::Mat& image);
 
     MatchKeypointsResult matchKeypoints(const ImageDescriptor& imageA, const ImageDescriptor& imageB,
-                                        float ratio, double treshold);
+                                        float ratio, double reprojTreshold);
 };
 
 
