@@ -10,7 +10,7 @@
 #include "altStitcher.h"
 
 
-cv::Mat AltStitcher::detectAndDescribe(const cv::Mat& image) {
+AltStitcher::ImageDescriptor AltStitcher::detectAndDescribe(const cv::Mat& image) {
     // convert the image to grayscale
     //cv::Mat gray_image;
     //cv::cvtColor(image, gray_image,  cv::ColorConversionCodes::COLOR_BGR2GRAY);
@@ -21,6 +21,11 @@ cv::Mat AltStitcher::detectAndDescribe(const cv::Mat& image) {
     cv::Mat descriptors;
     sift->detectAndCompute(image, cv::Mat(), keypoints, descriptors);
 
+    //
+    return ImageDescriptor(keypoints, descriptors);
 }
+
+
+
 
 

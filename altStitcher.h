@@ -7,6 +7,7 @@
 #ifndef ALTSTITCHER_H_
 #define ALTSTITCHER_H_
 
+#include <vector>
 #include <opencv2/core/mat.hpp>
 
 /**
@@ -17,7 +18,17 @@ class AltStitcher {
 public:
 
 private:
-    cv::Mat detectAndDescribe(const cv::Mat& image);
+    struct ImageDescriptor {
+        std::vector<cv::KeyPoint> m_keypoints;
+        cv::Mat m_descriptors;
+
+        ImageDescriptor(const std::vector<cv::KeyPoint>& keypoints, const cv::Mat& descriptors) :
+            m_keypoints(keypoints),
+            m_descriptors(descriptors)
+        {}
+    };
+
+    ImageDescriptor detectAndDescribe(const cv::Mat& image);
 };
 
 
