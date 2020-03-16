@@ -11,13 +11,15 @@ endif
 
 #include dirs
 INCDIR = .\
-         /usr/local/include/opencv4
+         /usr/local/include/opencv4 \
+         stitcher
 
 # C source files
 CSRC = $(wildcard ./*.c)
 
 # CPP source files
-CPPSRC = $(wildcard ./*.cpp)
+CPPSRC = $(wildcard ./*.cpp) \
+         $(wildcard stitcher/*.cpp)
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
