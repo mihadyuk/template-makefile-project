@@ -14,7 +14,7 @@ static string result_name = "result.jpg";
 static void printUsage(char** argv);
 static int parseCmdArgs(int argc, char** argv);
 
-int tutorial_stitcher(int argc, char* argv[])
+int tutorialStitcherMain(int argc, char* argv[])
 {
     int retval = parseCmdArgs(argc, argv);
     if (retval) return EXIT_FAILURE;
