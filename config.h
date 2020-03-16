@@ -10,7 +10,8 @@
 
 //#define USE_TUTORIAL_STITCHER
 //#define USE_ALT_STITCHER
-#define USE_MY_STITCHER
+//#define USE_MY_STITCHER
+#define USE_STITCHING_DETAILED
 
 
 #endif /* CONFIG_H_ */

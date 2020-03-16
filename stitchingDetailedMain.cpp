@@ -28,6 +28,8 @@
 #include "opencv2/xfeatures2d/nonfree.hpp"
 #endif
 
+#include "stitchingDetailedMain.h"
+
 #define ENABLE_LOG 1
 #define LOG(msg) std::cout << msg
 #define LOGLN(msg) std::cout << msg << std::endl
