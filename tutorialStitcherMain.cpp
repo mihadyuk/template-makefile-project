@@ -2,6 +2,8 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/stitching.hpp"
 #include <iostream>
+#include <chrono>
+#include <stdlib.h>
 
 using namespace std;
 using namespace cv;
@@ -20,7 +22,12 @@ int tutorialStitcherMain(int argc, char* argv[])
     if (retval) return EXIT_FAILURE;
     Mat pano;
     Ptr<Stitcher> stitcher = Stitcher::create(mode);
+
+    auto timestamp = std::chrono::steady_clock::now();
     Stitcher::Status status = stitcher->stitch(imgs, pano);
+    auto stitching_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - timestamp);
+    printf("stitching time: %f\n", (double)stitching_time.count() / 1e6);
+
     if (status != Stitcher::OK)
     {
         cout << "Can't stitch images, error code = " << int(status) << endl;
