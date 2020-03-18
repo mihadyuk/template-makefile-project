@@ -13,7 +13,7 @@
  *
  * https://docs.opencv.org/4.2.0/d8/d19/tutorial_stitcher.html
  * */
-#define USE_TUTORIAL_STITCHER
+//#define USE_TUTORIAL_STITCHER
 
 
 /**
@@ -24,7 +24,7 @@
  * https://www.pyimagesearch.com/2016/01/25/real-time-panorama-and-image-stitching-with-opencv/
  *
  * */
-//#define USE_ALT_STITCHER
+#define USE_ALT_STITCHER
 
 
 /**

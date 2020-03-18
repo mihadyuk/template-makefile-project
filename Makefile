@@ -21,14 +21,21 @@ endif
 #include dirs
 INCDIR = .\
          $(OPENCV_INCDIR) \
-         stitcher
+         stitcher \
+         altStitcher \
+         tutorialStitcher \
+         stitchingDetailed \
+         
 
 # C source files
 CSRC = $(wildcard ./*.c)
 
 # CPP source files
 CPPSRC = $(wildcard ./*.cpp) \
-         $(wildcard stitcher/*.cpp)
+         $(wildcard stitcher/*.cpp) \
+         $(wildcard altStitcher/*.cpp) \
+         $(wildcard tutorialStitcher/*.cpp) \
+         $(wildcard stitchingDetailed/*.cpp)
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
