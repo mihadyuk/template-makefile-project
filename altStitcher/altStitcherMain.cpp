@@ -26,7 +26,7 @@ int altStitcherMain(int argc, char* argv[])
         return EXIT_FAILURE;
 
     AltStitcher stitcher;
-    stitcher.stitch(imgs[0], imgs[1]);
+    stitcher.stitch(imgs[1], imgs[0]);
 
     return EXIT_SUCCESS;
 }
