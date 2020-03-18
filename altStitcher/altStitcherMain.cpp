@@ -26,8 +26,9 @@ int altStitcherMain(int argc, char* argv[])
         return EXIT_FAILURE;
 
     AltStitcher stitcher;
-    stitcher.stitch(imgs[1], imgs[0]);
+    cv::Mat result = stitcher.stitch(imgs[1], imgs[0]);
 
+    imwrite(result_name, result);
     return EXIT_SUCCESS;
 }
 

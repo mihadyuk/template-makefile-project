@@ -18,7 +18,7 @@
  * */
 class AltStitcher {
 public:
-    void stitch(const cv::Mat& imageA, const cv::Mat& imageB, float ratio=0.75, double reprojThreshold = 4.0);
+    cv::Mat stitch(const cv::Mat& imageA, const cv::Mat& imageB, float ratio=0.75, double reprojThreshold = 4.0);
 private:
     struct ImageDescriptor {
         ImageDescriptor(const std::vector<cv::KeyPoint>& keypoints, const cv::Mat& descriptors) :

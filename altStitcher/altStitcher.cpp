@@ -13,7 +13,7 @@
 
 #include "altStitcher.h"
 
-void AltStitcher::stitch(const cv::Mat& imageA, const cv::Mat& imageB, float ratio, double reprojThreshold) {
+cv::Mat AltStitcher::stitch(const cv::Mat& imageA, const cv::Mat& imageB, float ratio, double reprojThreshold) {
 
     auto det_result_a = detectAndDescribe(imageA);
     auto det_result_b = detectAndDescribe(imageB);
@@ -21,11 +21,15 @@ void AltStitcher::stitch(const cv::Mat& imageA, const cv::Mat& imageB, float rat
     auto match_result = matchKeypoints(det_result_a, det_result_b, ratio, reprojThreshold);
 
     if (match_result.m_matches.size() == 0)
-        return;
+        return cv::Mat();
 
     // apply a perspective warp to stitch the images together
-    //cv::Mat resulted_image()
-    //cv::warpPerspective(imageA, )
+    cv::Mat result(imageA.rows, imageA.cols, imageA.type());
+    cv::Size size(imageA.cols + imageB.cols, imageA.rows);
+    cv::warpPerspective(imageA, result, match_result.m_homography, size);
+
+    // @TODO create final image. imageB should be copied into result
+    return result;
 }
 
 AltStitcher::ImageDescriptor AltStitcher::detectAndDescribe(const cv::Mat& image) {
