@@ -1,7 +1,7 @@
 #include <iostream>
+#include <opencv2/imgcodecs.hpp>
 
 #include "myStitcher.h"
-#include "opencv2/imgcodecs.hpp"
 
 using namespace std;
 
