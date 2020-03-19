@@ -26,9 +26,12 @@ int altStitcherMain(int argc, char* argv[])
         return EXIT_FAILURE;
 
     AltStitcher stitcher;
-    cv::Mat result = stitcher.stitch(imgs[1], imgs[0]);
+    cv::Mat result = stitcher.stitch(imgs[0], imgs[1]);
 
+    //imshow("image A", imgs[0]);
+    //imshow("image b", imgs[1]);
     imwrite(result_name, result);
+    //cv::waitKey();
     return EXIT_SUCCESS;
 }
 

@@ -4,6 +4,7 @@
  *  Created on: Mar 2, 2020
  *      Author: user
  */
+#include <assert.h>
 #include <array>
 #include <opencv2/calib3d.hpp>
 #include <opencv2/imgproc.hpp>
@@ -24,11 +25,18 @@ cv::Mat AltStitcher::stitch(const cv::Mat& imageA, const cv::Mat& imageB, float 
         return cv::Mat();
 
     // apply a perspective warp to stitch the images together
-    cv::Mat result(imageA.rows, imageA.cols, imageA.type());
+    cv::Mat result(imageA.rows, imageA.cols + imageB.cols, imageA.type());
     cv::Size size(imageA.cols + imageB.cols, imageA.rows);
     cv::warpPerspective(imageA, result, match_result.m_homography, size);
+    //result = imageA;
 
     // @TODO create final image. imageB should be copied into result
+    for (int row = 0; row < imageB.rows; row++) {
+      for (int col = 0; col < imageB.cols; col++) {
+        result.at<uchar>(row, col) = imageB.at<uchar>(row, col);
+      }
+    }
+
     return result;
 }
 
