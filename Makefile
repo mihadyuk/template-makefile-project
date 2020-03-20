@@ -25,6 +25,7 @@ INCDIR = .\
          altStitcher \
          tutorialStitcher \
          stitchingDetailed \
+         utils
          
 
 # C source files
@@ -35,7 +36,8 @@ CPPSRC = $(wildcard ./*.cpp) \
          $(wildcard stitcher/*.cpp) \
          $(wildcard altStitcher/*.cpp) \
          $(wildcard tutorialStitcher/*.cpp) \
-         $(wildcard stitchingDetailed/*.cpp)
+         $(wildcard stitchingDetailed/*.cpp) \
+         $(wildcard utils/*.cpp)
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
