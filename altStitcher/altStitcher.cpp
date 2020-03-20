@@ -11,6 +11,7 @@
 #include <opencv2/features2d.hpp>
 #include <opencv2/xfeatures2d/nonfree.hpp>
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "altStitcher.h"
 
@@ -25,15 +26,21 @@ cv::Mat AltStitcher::stitch(const cv::Mat& imageA, const cv::Mat& imageB, float 
         return cv::Mat();
 
     // apply a perspective warp to stitch the images together
-    cv::Mat result(imageA.rows, imageA.cols + imageB.cols, imageA.type());
+    //cv::Mat result(imageA.rows, imageA.cols + imageB.cols, imageA.type());
+    cv::Mat result;
+    //printf("type before: %d\n", result.type());
     cv::Size size(imageA.cols + imageB.cols, imageA.rows);
     cv::warpPerspective(imageA, result, match_result.m_homography, size);
-    //result = imageA;
+    // https://stackoverflow.com/questions/10167534/how-to-find-out-what-type-of-a-mat-object-is-with-mattype-in-opencv/39780825
+    //printf("image type: %d, type after: %d\n", CV_8UC3, result.type());
+    assert(result.type() == CV_8UC3);
+    assert(imageB.type() == CV_8UC3);
 
-    // @TODO create final image. imageB should be copied into result
+    // create final image.
+    // https://stackoverflow.com/questions/6387627/opencv-mat-class-accessing-elements-of-a-multi-channel-matrix
     for (int row = 0; row < imageB.rows; row++) {
       for (int col = 0; col < imageB.cols; col++) {
-        result.at<uchar>(row, col) = imageB.at<uchar>(row, col);
+        result.at<cv::Vec3b>(row, col) = imageB.at<cv::Vec3b>(row, col);
       }
     }
 

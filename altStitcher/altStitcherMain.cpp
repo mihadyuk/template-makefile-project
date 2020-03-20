@@ -25,11 +25,14 @@ int altStitcherMain(int argc, char* argv[])
     if (retval)
         return EXIT_FAILURE;
 
-    AltStitcher stitcher;
-    cv::Mat result = stitcher.stitch(imgs[0], imgs[1]);
+    cv::Mat imageA(imgs[1]);
+    cv::Mat imageB(imgs[0]);
 
-    //imshow("image A", imgs[0]);
-    //imshow("image b", imgs[1]);
+    AltStitcher stitcher;
+    cv::Mat result = stitcher.stitch(imageA, imageB);
+
+    //imshow("image A", imageA);
+    //imshow("image b", imageB);
     imwrite(result_name, result);
     //cv::waitKey();
     return EXIT_SUCCESS;
