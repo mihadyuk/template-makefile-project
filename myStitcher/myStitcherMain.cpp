@@ -2,6 +2,7 @@
 #include <opencv2/imgcodecs.hpp>
 
 #include "myStitcher.h"
+#include "timeElapsed.h"
 
 using namespace std;
 
@@ -19,7 +20,11 @@ int myStitcherMain(int argc, char* argv[])
     if (retval) return EXIT_FAILURE;
     Mat pano;
     Ptr<MyStitcher> stitcher = MyStitcher::create(mode);
+    TimeElapsed stitching_time;
+    stitching_time.start();
     MyStitcher::Status status = stitcher->stitch(imgs, pano);
+    double stitched_time = stitching_time.elapsed();
+    printf("stitching time: %f\n", stitched_time);
     if (status != MyStitcher::OK)
     {
         cout << "Can't stitch images, error code = " << int(status) << endl;

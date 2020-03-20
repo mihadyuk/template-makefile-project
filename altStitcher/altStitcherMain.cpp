@@ -6,6 +6,7 @@
 #include <stdlib.h>
 
 #include "altStitcher.h"
+#include "timeElapsed.h"
 
 using namespace std;
 using namespace cv;
@@ -29,7 +30,11 @@ int altStitcherMain(int argc, char* argv[])
     cv::Mat imageB(imgs[0]);
 
     AltStitcher stitcher;
+    TimeElapsed stitching_time;
+    stitching_time.start();
     cv::Mat result = stitcher.stitch(imageA, imageB);
+    auto elapsed = stitching_time.elapsed();
+    printf("stitching time: %f\n", elapsed);
 
     //imshow("image A", imageA);
     //imshow("image b", imageB);

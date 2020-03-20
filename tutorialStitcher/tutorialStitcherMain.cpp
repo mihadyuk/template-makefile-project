@@ -5,6 +5,8 @@
 #include <chrono>
 #include <stdlib.h>
 
+#include "timeElapsed.h"
+
 using namespace std;
 using namespace cv;
 
@@ -23,10 +25,11 @@ int tutorialStitcherMain(int argc, char* argv[])
     Mat pano;
     Ptr<Stitcher> stitcher = Stitcher::create(mode);
 
-    auto timestamp = std::chrono::steady_clock::now();
+    TimeElapsed time_to_stitch;
+    time_to_stitch.start();
     Stitcher::Status status = stitcher->stitch(imgs, pano);
-    auto stitching_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - timestamp);
-    printf("stitching time: %f\n", (double)stitching_time.count() / 1e6);
+    auto stitching_time = time_to_stitch.elapsed();
+    printf("stitching time: %f\n", stitching_time);
 
     if (status != Stitcher::OK)
     {

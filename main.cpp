@@ -10,7 +10,6 @@ int main(int argc, char** argv )
     tutorialStitcherMain(argc, argv);
 #elif defined (USE_ALT_STITCHER)
     altStitcherMain(argc, argv);
-#warning "alternate stitcher is not implemented yet"
 #elif defined(USE_MY_STITCHER)
     myStitcherMain(argc, argv);
 #elif defined (USE_STITCHING_DETAILED)

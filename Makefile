@@ -21,7 +21,7 @@ endif
 #include dirs
 INCDIR = .\
          $(OPENCV_INCDIR) \
-         stitcher \
+         myStitcher \
          altStitcher \
          tutorialStitcher \
          stitchingDetailed \
@@ -33,7 +33,7 @@ CSRC = $(wildcard ./*.c)
 
 # CPP source files
 CPPSRC = $(wildcard ./*.cpp) \
-         $(wildcard stitcher/*.cpp) \
+         $(wildcard myStitcher/*.cpp) \
          $(wildcard altStitcher/*.cpp) \
          $(wildcard tutorialStitcher/*.cpp) \
          $(wildcard stitchingDetailed/*.cpp) \
