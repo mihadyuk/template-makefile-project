@@ -24,7 +24,7 @@
  * https://www.pyimagesearch.com/2016/01/25/real-time-panorama-and-image-stitching-with-opencv/
  *
  * */
-#define USE_ALT_STITCHER
+//#define USE_ALT_STITCHER
 
 
 /**
@@ -41,7 +41,7 @@
  * https://docs.opencv.org/4.2.0/d8/d19/tutorial_stitcher.html
  *
  * */
-//#define USE_STITCHING_DETAILED
+#define USE_STITCHING_DETAILED
 
 
 #endif /* CONFIG_H_ */
