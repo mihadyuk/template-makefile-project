@@ -26,13 +26,13 @@ CPPSRC = $(wildcard ./*.cc) \
 ASSRC = $(wildcard ./*.S)
 
 ifeq ($(LIBDIR),)
-    LIBDIR  = .
+    LIBDIR  = /usr/lib/x86_64-linux-gnu
 endif
 
 #used libs
 #ULIBS = config++ pthread
 ifeq ($(ULIBS),)
-	ULIBS =
+	ULIBS = xml2
 endif	
 
 
