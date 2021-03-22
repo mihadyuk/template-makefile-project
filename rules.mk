@@ -2,7 +2,7 @@ ifeq ($(ASM_LST_FILE_GEN),yes)
 	COPT += -Wa,-almsh=$(LSTDIR)/$(notdir $(<:.c=.lst))
 endif	
 ifeq ($(ASM_LST_FILE_GEN),yes)	
-	CPPOPT += -Wa,-almsh=$(LSTDIR)/$(notdir $(<:.cpp=.lst))
+	CPPOPT += -Wa,-almsh=$(LSTDIR)/$(notdir $(<:.cc=.lst))
 endif	
 ifeq ($(MAP_FILE_GEN),yes)	
 	LDOPT += -Wl,-Map=$(BUILDDIR)/$(PROJECT).map
@@ -43,7 +43,7 @@ endif
 SRCPATHS = $(sort $(dir $(CSRC)) $(dir $(CPPSRC)) $(dir $(ASSRC)))
 # Object files groups
 COBJS   = $(addprefix $(OBJDIR)/, $(notdir $(CSRC:.c=.o)))
-CPPOBJS = $(addprefix $(OBJDIR)/, $(notdir $(CPPSRC:.cpp=.o)))
+CPPOBJS = $(addprefix $(OBJDIR)/, $(notdir $(CPPSRC:.cc=.o)))
 ASOBJS  = $(addprefix $(OBJDIR)/, $(notdir $(ASSRC:.S=.o)))
 OBJS    = $(COBJS) $(CPPOBJS) $(ASOBJS)
 #lib dir
@@ -97,7 +97,7 @@ $(OBJDIR):
 $(LSTDIR):
 	mkdir -p $(LSTDIR)
 
-$(CPPOBJS) : $(OBJDIR)/%.o : %.cpp Makefile
+$(CPPOBJS) : $(OBJDIR)/%.o : %.cc Makefile
 ifeq ($(USE_VERBOSE_COMPILE),yes)
 	@echo 
 	$(CPPC) -c $(CPPOPT) $(IINCDIR) $< -o $@

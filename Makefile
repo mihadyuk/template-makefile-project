@@ -11,15 +11,16 @@ endif
 
 #include dirs
 INCDIR = .\
-         src \
+		 /usr/include/libxml2 \
+         settings/include \
 
 # C source files
 CSRC = $(wildcard src/*.c) \
        $(wildcard ./*.c) \
 
 # CPP source files
-CPPSRC = $(wildcard ./*.cpp) \
-         $(wildcard src/*.cpp) \
+CPPSRC = $(wildcard ./*.cc) \
+         $(wildcard ./settings/src/*.cc)
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
