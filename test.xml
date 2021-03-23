@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <usb>
+        <enabledMask type="uint">1</enabledMask>
+        <modeMask type="uint">0</modeMask><!--0-gadget, 1-host-->
+    </usb>
+    <serial>
+        <interface>
+            <address type="uint">0</address>
+            <enabled type="bool">false</enabled>
+        </interface>
+
+        <interface>
+            <address type="uint">1</address>
+            <enabled type="bool">true</enabled>
+            <speed type="uint">115200</speed>
+            <mask type="uint">0</mask>
+        </interface>
+
+        <interface>
+            <address type="uint">2</address>
+            <enabled type="bool">true</enabled>
+            <speed type="uint">9600</speed>
+            <mask type="uint">16</mask>
+        </interface>
+    </serial>
+
+    <ethernet>
+        <interface>
+            <address type="uint">1</address>
+            <enabled type="bool">false</enabled>
+        </interface>
+
+        <interface>
+            <ppp type="bool">false</ppp>
+            <address type="uint">0</address><!--if ppp is true this address should be the address of appropriate serial device-->
+            <enabled type="bool">true</enabled>
+            <dhcp type="bool">false</dhcp>
+            <netAddr type="string">192.168.0.5</netAddr>
+            <netMask type="string">255.255.255.0</netMask>
+            <gateway type="string">192.168.0.1</gateway>
+            <dns1 type="string">8.8.8.8</dns1>
+            <dns1 type="string">8.8.4.4</dns1>
+        </interface>
+
+        <interface>
+            <ppp type="bool">true</ppp>
+            <address type="uint">1</address><!--if ppp is true this address should be the address of appropriate serial device-->
+            <enabled type="bool">true</enabled>
+            <dhcp type="bool">false</dhcp>
+            <netAddr type="string">192.168.1.5</netAddr>
+            <remoteAddr type="string">192.168.1.6</remoteAddr>
+            <netMask type="string">255.255.255.0</netMask>
+            <gateway type="string">192.168.0.1</gateway>
+            <dns1 type="string">8.8.8.8</dns1>
+            <dns2 type="string">8.8.4.4</dns2>
+        </interface>
+
+        <interface>
+            <ppp type="bool">true</ppp>
+            <address type="uint">2</address><!--if ppp is true this address should be the address of appropriate serial device-->
+            <enabled type="bool">true</enabled>
+            <dhcp type="bool">true</dhcp>
+        </interface>
+    </ethernet>
+</root>
