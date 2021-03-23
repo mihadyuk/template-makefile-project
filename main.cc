@@ -10,6 +10,8 @@ int main(int argc, char *argv[]) {
 
   Settings &settings = Settings::instance();
   settings.open("test.xml");
+
+  UsbParameters usbParams = settings.usbParameters();
   return 0;
 }
 
