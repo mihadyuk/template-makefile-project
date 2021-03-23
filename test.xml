@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
     <usb>
-        <enabledMask type="uint">1</enabledMask>
-        <modeMask type="uint">0</modeMask><!--0-gadget, 1-host-->
+        <enabledMask type="uint">12</enabledMask>
+        <modeMask type="uint">34</modeMask><!--0-gadget, 1-host-->
     </usb>
     <serial>
         <interface>
-            <address type="uint">0</address>
+            <address type="uint">56</address>
             <enabled type="bool">false</enabled>
         </interface>
 
         <interface>
-            <address type="uint">1</address>
+            <address type="uint">78</address>
             <enabled type="bool">true</enabled>
             <speed type="uint">115200</speed>
-            <mask type="uint">0</mask>
+            <mask type="uint">90</mask>
         </interface>
 
         <interface>
-            <address type="uint">2</address>
+            <address type="uint">91</address>
             <enabled type="bool">true</enabled>
             <speed type="uint">9600</speed>
             <mask type="uint">16</mask>
