@@ -100,13 +100,29 @@ int main(int argc, char *argv[]) {
 
   std::cout << "template makefile project \r\n";
 
-  //dumpXml("test.xml");
+  //dumpXml("test_creation_default.xml");
+  //return 0;
+
   Settings &settings = Settings::instance();
-  settings.open("test.xml");
+  settings.open("test_creation_default.xml");
 
   UsbParameters usbParams 			= settings.usbParameters();
   IPParameters ipParameters 		= settings.ipParameters();
   SerialParameters serialParameters = settings.serialParameters();
+
+  usbParams._enabledMask += 100;
+
+  ipParameters._ipInterfaces.push_back(IPParameters::IP4Params());
+
+  serialParameters._serialInterfaces.push_back(SerialParameters::SerialPortParams());
+  serialParameters._serialInterfaces.back()._address++;
+
+  settings.setParameters(ipParameters);
+  settings.setParameters(serialParameters);
+  settings.setParameters(usbParams);
+
+  ipParameters._ipInterfaces.back()._dns1 = "1.2.3.4";
+  settings.setParameters(ipParameters);
   return 0;
 }
 
