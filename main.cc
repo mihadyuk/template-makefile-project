@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <iostream>
 #include "settings.h"
+#include "fs_utils.h"
 
 using namespace verifone::service::usbcomm;
 
@@ -96,10 +97,16 @@ static void dumpXml(const std::string fileName)
 	}
 }
 
+
 int main(int argc, char *argv[]) {
 
   std::cout << "template makefile project \r\n";
 
+  if (verifone::fs_utils::isDirectoryExist("test_dir") == false)
+  {
+      bool result = verifone::fs_utils::createDirectory("./test_dir/");
+      assert(result == true);
+  }
   //dumpXml("test_creation_default.xml");
   //return 0;
 

@@ -13,6 +13,7 @@ endif
 INCDIR = .\
 		 /usr/include/libxml2 \
          settings/include \
+         utils
 
 # C source files
 CSRC = $(wildcard src/*.c) \
@@ -20,7 +21,8 @@ CSRC = $(wildcard src/*.c) \
 
 # CPP source files
 CPPSRC = $(wildcard ./*.cc) \
-         $(wildcard ./settings/src/*.cc)
+         $(wildcard ./settings/src/*.cc) \
+         $(wildcard ./utils/*.cc)
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
