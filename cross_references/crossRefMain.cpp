@@ -1,11 +1,12 @@
 /*
  * crossRefMain.cpp
  *
- *  Created on: 3 окт. 2019 г.
+ *  Created on: 3 пїЅпїЅпїЅ. 2019 пїЅ.
  *      Author: Andrey
  */
 
 #include "crossRefMain.h"
+
 #include "classA.h"
 #include "classB.h"
 

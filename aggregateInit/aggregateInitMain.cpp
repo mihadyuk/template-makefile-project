@@ -6,6 +6,7 @@
  */
 #include "aggregateInitMain.h"
 #include <stdio.h>
+#include <stdint.h>
 
 struct PlainStruct {
     int32_t  m_int32;

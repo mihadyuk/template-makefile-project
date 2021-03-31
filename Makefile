@@ -47,7 +47,7 @@ endif
 #used libs
 #ULIBS = config++ pthread
 ifeq ($(ULIBS),)
-	ULIBS =
+	ULIBS = pthread
 endif	
 
 

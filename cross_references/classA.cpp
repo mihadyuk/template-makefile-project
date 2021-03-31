@@ -1,7 +1,7 @@
 /*
  * ClassA.cpp
  *
- *  Created on: 3 окт. 2019 г.
+ *  Created on: 3 пїЅпїЅпїЅ. 2019 пїЅ.
  *      Author: Andrey
  */
 

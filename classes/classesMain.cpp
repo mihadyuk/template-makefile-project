@@ -7,6 +7,7 @@
 #include "classesMain.h"
 #include "classesBase.h"
 #include <stdio.h>
+#include <stdint.h>
 
 struct Test {
     int32_t m_int32;

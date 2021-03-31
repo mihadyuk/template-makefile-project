@@ -9,7 +9,11 @@
 #include "round.h"
 #include "crossRefMain.h"
 #include "smartPtrsMain.h"
-#include "virtualInheritanceMain.h"
+#include "VirtualInheritanceMain.h"
+
+#include <condition_variable>
+#include <chrono>
+
 
 int main(int argc, char *argv[]) {
 
@@ -22,7 +26,13 @@ int main(int argc, char *argv[]) {
   //std::cout << roundToNearestPow2<uint32_t>(48);
   //crossRefMain();
   //smartPtrsMain();
-    virtualInheritanceMain();
+  //virtualInheritanceMain();
+  //std::condition_variable cv;
+  //std::mutex mutex;
+  //std::unique_lock<std::mutex> lk(mutex);
+  //cv.notify_all();
+  //std::cv_status status = cv.wait_for(lk, std::chrono::milliseconds(0));
+  //assert(status == std::cv_status::no_timeout);
   return 0;
 }
 
