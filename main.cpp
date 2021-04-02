@@ -13,6 +13,13 @@
 
 #include <condition_variable>
 #include <chrono>
+#include <future>
+
+static int thread_func(void *p)
+{
+    return 1;
+}
+
 
 
 int main(int argc, char *argv[]) {
@@ -33,6 +40,8 @@ int main(int argc, char *argv[]) {
   //cv.notify_all();
   //std::cv_status status = cv.wait_for(lk, std::chrono::milliseconds(0));
   //assert(status == std::cv_status::no_timeout);
+  //std::future<int> result = std::async(std::launch::async, thread_func, nullptr);
+  //auto result = std::async(std::launch::async, thread_func, nullptr);
   return 0;
 }
 
