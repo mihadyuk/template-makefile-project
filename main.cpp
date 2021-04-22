@@ -26,7 +26,7 @@ static int thread_func(void *p)
     std::unique_lock lk(g_mutex);
     //for (int i = 0; i < 3; i++)
     //{
-        std::cv_status status = g_cv.wait_for(lk, std::chrono::milliseconds::max());
+        std::cv_status status = g_cv.wait_for(lk, std::chrono::milliseconds(9223372036854775807ULL/0x1000000));
         printf("cv_status %s, %u\n", (status == std::cv_status::no_timeout)? "no_timeout" : "timeout",
                 (uint32_t)(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - g_timestamp)).count());
     //}
@@ -55,6 +55,7 @@ int main(int argc, char *argv[]) {
   //assert(status == std::cv_status::no_timeout);
   //std::future<int> result = std::async(std::launch::async, thread_func, nullptr);
   //auto result = std::async(std::launch::async, thread_func, nullptr);
+  printf("max timeout %llu\n", std::chrono::milliseconds::max().count());
   g_timestamp = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now());
   printf("start thread %u\n", (uint32_t)(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - g_timestamp)).count());
   //g_mutex.lock();
@@ -62,7 +63,7 @@ int main(int argc, char *argv[]) {
   std::this_thread::sleep_for(std::chrono::milliseconds(200));
   //g_mutex.unlock();
   printf("notification %u\n", (uint32_t)(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - g_timestamp)).count());
-  //g_cv.notify_one();
+  g_cv.notify_one();
   thread.join();
   return 0;
 }
