@@ -10,22 +10,24 @@
 #include <dirent.h>
 #include <string.h>
 
-static std::string getVidPid(const std::string &busInfo) {
+
+static std::string getModalias(const std::string &busInfo) {
 
     std::string modaliasPath = "/sys/bus/usb/devices/" + busInfo + "/modalias";
 
     std::ifstream modalias(modaliasPath, std::ios::in);
     std::string retval;
     modalias >> retval;
-    printf("modalias: \"%s\"", retval.c_str());
+    //printf("modalias: \"%s\"", retval.c_str());
     return retval;
 }
 
-static std::vector<std::string> listDir(const std::string &dir) {
-    std::vector<std::string> data;
+static std::vector<std::string> listUsbSerialDevices() {
+    std::vector<std::string> retval;
     struct dirent *dirent;
     char buffer[4096];
 
+    std::string dir("/sys/bus/usb-serial/devices");
     DIR *d = opendir(dir.c_str());
 
     if (d) {
@@ -42,8 +44,8 @@ static std::vector<std::string> listDir(const std::string &dir) {
                         if (posDevBus != std::string::npos) {
                             std::string busInfo(lnk.substr(posDevBus + 1, posDev - posDevBus - 1));
 
-                            // get vid & pid using bus info
-                            data.push_back(std::string(dirent->d_name) + " " + busInfo + " " + getVidPid(busInfo));
+                            // format string as "<device name> <bus info> <modalias>"
+                            retval.push_back(std::string(dirent->d_name) + " " + busInfo + " " + getModalias(busInfo));
                         }
                     }
                 }
@@ -52,27 +54,15 @@ static std::vector<std::string> listDir(const std::string &dir) {
         closedir(d);
     }
 
-    return data;
-}
-
-static void getPortInfo()
-{
-    // look for usb serial devices
-    std::string devFolder("/sys/bus/usb-serial/devices");
-    auto usbSerialDevices = listDir(devFolder);
-
-    for (const auto &dev : usbSerialDevices) {
-        printf("dev: \"%s\"\n", dev.c_str());
-    }
+    return retval;
 }
 
 int main(int argc, char *argv[]) {
 
-  std::cout << "template makefile project \r\n";
+    auto devices = listUsbSerialDevices();
 
-
-  getPortInfo();
-  return 0;
+    for (const auto &dev : devices) {
+        printf("dev: \"%s\"\n", dev.c_str());
+    }
+    return 0;
 }
-
-
