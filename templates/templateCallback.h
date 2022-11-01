@@ -13,38 +13,54 @@
 #include <stdio.h>
 
 template<typename F, typename... Fparams>
-    class Callback {
-    public:
-        void add(const F callback)
+class Callback {
+public:
+    void add(const F callback)
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+
+        for (const F &item : _callbacks)
         {
-            std::lock_guard<std::mutex> lock(_mutex);
-
-            for (const F &item : _callbacks)
+            auto callback_ptr = callback.template target<void(*)(Fparams...)>();
+            auto item_ptr     = item.template target<void(*)(Fparams...)>();
+            if (callback_ptr && item_ptr && *callback_ptr == *item_ptr)
             {
-                auto callback_ptr = callback.template target<void(*)(Fparams...)>();
-                auto item_ptr     = item.template target<void(*)(Fparams...)>();
-                if (callback_ptr && item_ptr && *callback_ptr == *item_ptr)
-                {
-                    printf("callback %p is already added\n", *callback_ptr);
-                    return;
-                }
-
+                printf("callback %p is already added\n", *callback_ptr);
+                return;
             }
-            _callbacks.push_back(callback);
-        }
 
-        void call(Fparams... args)
+        }
+        _callbacks.push_back(callback);
+    }
+
+    void remove(const F callback)
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+
+        for (auto it = _callbacks.begin(); it != _callbacks.end(); ++it) {
+            auto callback_ptr = callback.template target<void(*)(Fparams...)>();
+            auto item_ptr     = (*it).template target<void(*)(Fparams...)>();
+            if (callback_ptr && item_ptr && *callback_ptr == *item_ptr)
+            {
+                _callbacks.erase(it);
+                printf("callback %p is removed\n", *callback_ptr);
+                return;
+            }
+        }
+    }
+
+    void call(Fparams... args)
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        for (const auto & callback : _callbacks)
         {
-            std::lock_guard<std::mutex> lock(_mutex);
-            for (const auto & callback : _callbacks)
-            {
-                callback(args...);
-            }
+            callback(args...);
         }
-    private:
-        std::mutex _mutex;
-        std::list<F> _callbacks;
-    };
+    }
+private:
+    std::mutex _mutex;
+    std::list<F> _callbacks;
+};
 
 
 
