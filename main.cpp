@@ -60,6 +60,7 @@ int main(int argc, char *argv[]) {
   //classesMain();
   //aggregateInitMain();
   templatesMain();
+  return 0;
   //std::cout << roundToNearestPow2<uint32_t>(48);
   //crossRefMain();
   //smartPtrsMain();
