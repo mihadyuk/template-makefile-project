@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
   //memallocMain();
   //classesMain();
   //aggregateInitMain();
-  //templatesMain();
+  templatesMain();
   //std::cout << roundToNearestPow2<uint32_t>(48);
   //crossRefMain();
   //smartPtrsMain();

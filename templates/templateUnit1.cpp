@@ -8,15 +8,32 @@
 #include <stdio.h>
 #include "templateUnit1.h"
 #include "templateExample.h"
+#include "templateCallback.h"
+
+
 
 static Array<uint32_t, 10> g_array;
 
+static void func(int value) {
+    printf("value: %d\n", value);
+}
+
 void templateUnit1() {
 
+    Callback<std::function<void(int)>, int> callbacks;
+    std::function<void(int)> fn1(func);
+    std::function<void(int)> fn2(std::bind(&func, std::placeholders::_1));
+    auto ptr1 = fn1.target<void(*)(int)>();
+    auto ptr2 = fn2.target<std::function<void(int)>>();
+    callbacks.add(func);
+    callbacks.add(func);
+    callbacks.call(10);
+#if 0
     for (size_t i = 0; i < g_array.size(); i++) {
         g_array[i] = (uint32_t)i;
         printf("unit1: %u \r\n", g_array.value(i));
     }
+#endif
 }
 
 
