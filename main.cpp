@@ -113,18 +113,18 @@ bool getVidPidFromProductField(const std::string &buffer, std::pair<std::string,
     template<typename F, typename... Fparams>
     class Callback {
     public:
-        void add(F callback)
+        void add(const F callback)
         {
             std::lock_guard<std::mutex> lock(_mutex);
 #if 1
-            for (F &item : _callbacks)
+            for (const F &item : _callbacks)
             {
                 auto callback_ptr = callback.template target<void(*)(Fparams...)>();
                 auto item_ptr     = item.template target<void(*)(Fparams...)>();
 #if 1
                 if (callback_ptr && item_ptr && *callback_ptr == *item_ptr)
                 {
-                    printf("callback %p is already added", callback_ptr);
+                    printf("callback %p is already added\n", *callback_ptr);
                     return;
                 }
 #endif
