@@ -2,44 +2,20 @@
 #include <iostream>
 #include <string>
 #include <unistd.h>
-
+#include <thread>
+#include <sys/wait.h>
+#include <stdlib.h>
+#include <string.h>
+#include <atomic>
 
 class PPP {
 public:
   void start() {
-
-    std::string cmd("/usr/bin/pppd " + buildPppParams());
-
-    //std::cout.rdbuf(prev_cout_buf);
-    //std::cerr.rdbuf(prev_cerr_buf);
-
-    pid_t pid = fork();
-    if (pid == 0)
-    {
-        printf("executing cmd %s\n", cmd.c_str());
-        int retval = std::system(cmd.c_str());
-        if (retval < 0)
-        {
-            printf("failed to start pppd, error %d\n", retval);
-            return;
-        }
-        printf("ppp started. retval: %d\n", retval);
-        return;
-    }
-    return;
+    thread_ = std::thread(&PPP::threadFunc, this);
   }
 
   void stop() {
-    std::string cmd("killall -SIGTERM pppd");
-
-    printf("executing cmd %s\n", cmd.c_str());
-    int retval = std::system(cmd.c_str());
-    if (retval < 0)
-    {
-        printf("failed to stop pppd, error %d\n", retval);
-        return;
-    }
-    printf("killed pppd. retval: %d\n", retval);
+    stop_ = true;
   }
 
 private:
@@ -50,23 +26,70 @@ private:
       //params += "pppd ";
       //params += " " + _path + " ";
 
-      params += " /dev/ttyUSB0 115200 ";
+      params += " /dev/ttyUSB0 115200 nodetach \n";
 
-      params += "192.168.100.10:192.168.100.20 ";
+      params += "192.168.100.10:192.168.100.20 \n";
 
-      params += "ms-dns 8.8.8.8 ";
-      params += "ms-dns 8.8.4.4 ";
+      params += "ms-dns 8.8.8.8 \n";
+      params += "ms-dns 8.8.4.4 \n";
 
-      params += "nocrtscts noauth ";
+      params += "nocrtscts noauth \n";
 
-      params += "local persist unit 3 ";
-      params += "lcp-echo-failure 3 lcp-echo-interval 20 ";
-      params += "lcp-max-configure 99999 ";
+      params += "local persist unit 3 \n";
+      params += "lcp-echo-failure 3 lcp-echo-interval 20 \n";
+      params += "lcp-max-configure 99999 \n";
 
       return params;
   }
 
+  void threadFunc() {
 
+    // create a pipe for stdout, stderr
+    pipe(pipe_stdout_);
+    pipe(pipe_stderr_);
+
+    pid_t pid = fork();
+    if (pid > 0) {
+      // parent
+      // process stdout, stderr from child. If child is killed, exit
+      int status = 0;
+      while (waitpid(pid, &status, WNOHANG) == 0) {
+        // do some work while child is active
+        if (WIFEXITED(status))
+          break;
+        if (stop_) {
+          kill(pid, SIGKILL);
+          stop_ = false;
+        }
+      }
+      // exit from parent
+      close(pipe_stdout_[0]);
+      close(pipe_stdout_[1]);
+      close(pipe_stderr_[0]);
+      close(pipe_stderr_[1]);
+      exit(EXIT_SUCCESS);
+    }
+    else if (pid == 0) {
+      // child
+      dup2(pipe_stdout_[1], STDOUT_FILENO);
+      close(pipe_stdout_[0]);
+      close(pipe_stdout_[1]);
+      dup2(pipe_stderr_[1], STDERR_FILENO);
+      close(pipe_stderr_[0]);
+      close(pipe_stderr_[1]);
+      std::string cmd("/usr/bin/pppd ");
+      std::string params(buildPppParams());
+      printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
+      execl(cmd.c_str(), params.c_str(), nullptr);
+      printf("failed to start pppd, error %s\n", strerror(errno));
+      exit(EXIT_FAILURE);
+    }
+  }
+
+  int pipe_stdout_[2];
+  int pipe_stderr_[2];
+  std::thread thread_;
+  std::atomic_bool stop_;
 };
 
 int main(int argc, char *argv[]) {
