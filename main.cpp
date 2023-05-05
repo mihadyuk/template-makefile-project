@@ -15,20 +15,73 @@ class PPP {
 public:
   void start() {
     stop_ = false;
-    thread_ = std::thread(&PPP::threadFunc, this);
-    std::ostringstream out;
-    out << std::hex << thread_.get_id() << std::endl;
-    std::string out_str = out.str();
-    printf("thread id: %s\n", out_str.c_str());
+
+    // create a pipe for stdout, stderr
+    int retval = pipe(pipe_stdout_);
+    if (retval < 0) {
+      printf("unable to create stdout pipe, error: %d\n", retval);
+      return;
+    }
+    retval = pipe(pipe_stderr_);
+    if (retval < 0) {
+      printf("unable to create stderr pipe, error: %d\n", retval);
+      close(pipe_stdout_[0]);
+      close(pipe_stdout_[1]);
+      return;
+    }
+
+    pid_ = fork();
+    printf("fork result: 0x%.8X\n", pid_);
+    if (pid_ > 0) {
+      // parent
+      int status = 0;
+      for (int i = 0; i < 10; i++) {
+        pid_t waitpid_retval = waitpid(pid_, &status, WNOHANG);
+        printf("waitpid_retval: 0x%.8X, child exit status: 0x%.8X\n", waitpid_retval, status);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      }
+
+      // create a thread for processing stdout, stderr
+      thread_ = std::thread(&PPP::threadFunc, this);
+      std::ostringstream out;
+      out << std::hex << thread_.get_id() << std::endl;
+      std::string out_str = out.str();
+      printf("thread id: %s\n", out_str.c_str());
+      return;
+    }
+    else if (pid_ == 0) {
+      // child
+      dup2(pipe_stdout_[1], STDOUT_FILENO);
+      close(pipe_stdout_[0]);
+      close(pipe_stdout_[1]);
+      dup2(pipe_stderr_[1], STDERR_FILENO);
+      close(pipe_stderr_[0]);
+      close(pipe_stderr_[1]);
+      //std::string cmd("/usr/bin/pppd");
+      //std::string params(buildPppParams());
+      //printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
+      //execl(cmd.c_str(), params.c_str(), nullptr);
+      execl("/usr/bin/pppd", "pppd", "/dev/ttyUSB0", "115200", "nodetach", "192.168.100.10:192.168.100.20", "nocrtscts", "noauth",
+            "local", "persist", "unit", "3", "lcp-echo-failure", "3", "lcp-echo-interval", "20",
+            "lcp-max-configure","9999", nullptr);
+      printf("failed to start pppd, error %s\n", strerror(errno));
+      exit(EXIT_FAILURE);
+    }
   }
 
   void stop() {
     printf("stop ppp requested\n");
     stop_ = true;
-    while (thread_.joinable()) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(500));
-      printf("waiting for thread\n");
-    }
+    thread_.join();
+
+    close(pipe_stdout_[0]);
+    close(pipe_stdout_[1]);
+    close(pipe_stderr_[0]);
+    close(pipe_stderr_[1]);
+
+    printf("killing 0x%.8X pid\n", pid_);
+    int retval = kill(pid_, SIGKILL);
+    printf("kill returned status: %d\n", retval);
   }
 
 private:
@@ -57,121 +110,50 @@ private:
   }
 
   void threadFunc() {
+    char buffer[128];
 
-    // create a pipe for stdout, stderr
-    int retval = pipe(pipe_stdout_);
-    if (retval < 0) {
-      printf("unable to create stdout pipe, error: %d\n", retval);
-      return;
-    }
-    retval = pipe(pipe_stderr_);
-    if (retval < 0) {
-      printf("unable to create stderr pipe, error: %d\n", retval);
-      close(pipe_stdout_[0]);
-      close(pipe_stdout_[1]);
-      return;
-    }
-
-    pid_t pid = fork();
-    if (pid > 0) {
-      // parent
-      printf("fork result: 0x%.8X\n", pid);
-      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-      // process stdout, stderr from child. If child is killed, exit
-      int status = 0;
-      //pid_t waitpid_retval = 0;
-      //while ((waitpid_retval = waitpid(pid, &status, WNOHANG)) == 0) {
-      while (true) {
-        pid_t waitpid_retval = waitpid(pid, &status, WNOHANG);
-        printf("waitpid_retval: 0x%.8X\n", waitpid_retval);
-        // do some work while child is active
-        if (WIFEXITED(status)) {
-          printf("child exit status: 0x%.8X\n", status);
-          //break;
-        }
-        if (stop_) {
-          printf("killing 0x%.8X pid\n", pid);
-          int retval = kill(pid, SIGKILL);
-          printf("kill returned status: %d\n", retval);
-          stop_ = false;
-          std::this_thread::sleep_for(std::chrono::milliseconds(2000));
-          return;
-        }
-
-
-        char buffer[128];
-        // read stdout
-        int bytesAvailable = 0;
-        if (ioctl(pipe_stdout_[0], FIONREAD, &bytesAvailable) == 0) {
-          if (bytesAvailable > 0) {
-            memset(buffer, 0, sizeof(buffer));
-            ssize_t retval = read(pipe_stdout_[0], buffer, bytesAvailable);
-            if (retval > 0) {
-              printf("stdout: %s\n", buffer);
-            } else if (retval == 0) {
-              printf("stdout: eof reached\n");
-            }
-            else {
-              printf("stdout: error reading. retval: %ld", retval);
-            }
+    while (stop_ == false) {
+      // read stdout
+      int bytesAvailable = 0;
+      if (ioctl(pipe_stdout_[0], FIONREAD, &bytesAvailable) == 0) {
+        if (bytesAvailable > 0) {
+          memset(buffer, 0, sizeof(buffer));
+          ssize_t retval = read(pipe_stdout_[0], buffer, bytesAvailable);
+          if (retval > 0) {
+            printf("stdout: %s\n", buffer);
+          } else if (retval == 0) {
+            printf("stdout: eof reached\n");
+          }
+          else {
+            printf("stdout: error reading. retval: %ld", retval);
           }
         }
-        else {
-          printf("ioctl failed\n");
-        }
-
-        // read stderr
-        bytesAvailable = 0;
-        if (ioctl(pipe_stderr_[0], FIONREAD, &bytesAvailable) == 0) {
-          if (bytesAvailable > 0) {
-            memset(buffer, 0, sizeof(buffer));
-            ssize_t retval = read(pipe_stderr_[0], buffer, bytesAvailable);
-            if (retval > 0) {
-              printf("stderr: %s\n", buffer);
-            } else if (retval == 0) {
-              printf("stderr: eof reached\n");
-            }
-            else {
-              printf("stderr: error reading. retval: %ld\n", retval);
-            }
-          }
-        }
-        else {
-          printf("ioctl failed\n");
-        }
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       }
-      // exit from parent
-      close(pipe_stdout_[0]);
-      close(pipe_stdout_[1]);
-      close(pipe_stderr_[0]);
-      close(pipe_stderr_[1]);
-      printf("normal exiting parent\n");
-      //exit(EXIT_SUCCESS);
-      return;
-    }
-    else if (pid == 0) {
-      // child
-      dup2(pipe_stdout_[1], STDOUT_FILENO);
-      close(pipe_stdout_[0]);
-      close(pipe_stdout_[1]);
-      dup2(pipe_stderr_[1], STDERR_FILENO);
-      close(pipe_stderr_[0]);
-      close(pipe_stderr_[1]);
-      //std::string cmd("/usr/bin/pppd");
-      //std::string params(buildPppParams());
-      //printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
-      //execl(cmd.c_str(), params.c_str(), nullptr);
-      execl("/usr/bin/pppd", "pppd", "/dev/ttyUSB0", "115200", "nodetach", "192.168.100.10:192.168.100.20", "nocrtscts", "noauth",
-            "local", "persist", "unit", "3", "lcp-echo-failure", "3", "lcp-echo-interval", "20",
-            "lcp-max-configure","9999", nullptr);
-      printf("failed to start pppd, error %s\n", strerror(errno));
-      exit(EXIT_FAILURE);
-      return;
-    }
-    else {
-      printf("fork error: %d\n", pid);
+      else {
+        printf("ioctl failed\n");
+      }
+
+      // read stderr
+      bytesAvailable = 0;
+      if (ioctl(pipe_stderr_[0], FIONREAD, &bytesAvailable) == 0) {
+        if (bytesAvailable > 0) {
+          memset(buffer, 0, sizeof(buffer));
+          ssize_t retval = read(pipe_stderr_[0], buffer, bytesAvailable);
+          if (retval > 0) {
+            printf("stderr: %s\n", buffer);
+          } else if (retval == 0) {
+            printf("stderr: eof reached\n");
+          }
+          else {
+            printf("stderr: error reading. retval: %ld\n", retval);
+          }
+        }
+      }
+      else {
+        printf("ioctl failed\n");
+      }
+
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
   }
 
@@ -179,6 +161,7 @@ private:
   int pipe_stderr_[2];
   std::thread thread_;
   std::atomic_bool stop_;
+  pid_t pid_;
 };
 
 int main(int argc, char *argv[]) {
