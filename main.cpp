@@ -40,7 +40,7 @@ public:
         printf("waitpid_retval: 0x%.8X, child exit status: 0x%.8X\n", waitpid_retval, status);
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
       }
-
+      //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
       // create a thread for processing stdout, stderr
       thread_ = std::thread(&PPP::threadFunc, this);
       std::ostringstream out;
@@ -61,10 +61,21 @@ public:
       //std::string params(buildPppParams());
       //printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
       //execl(cmd.c_str(), params.c_str(), nullptr);
-#if 1
+#if 0
       execl("/usr/bin/pppd", "pppd", "/dev/ttyUSB0", "115200", "nodetach", "192.168.100.10:192.168.100.20", "nocrtscts", "noauth",
             "local", "persist", "unit", "3", "lcp-echo-failure", "3", "lcp-echo-interval", "20",
             "lcp-max-configure","9999", nullptr);
+#endif
+#if 1
+      //static char *params[3 + 1] = {"ls", "-lah", "/tmp", nullptr};
+      static char *params[3 + 1] = {nullptr};
+      asprintf(&params[0], "ls");
+      asprintf(&params[1], "-lah");
+      asprintf(&params[2], "/tmp");
+      int retval = execvp("ls", params);
+      printf("execvp returned %d\n", retval);
+      exit(errno);
+      //return;
 #endif
       printf("failed to start pppd, error %s\n", strerror(errno));
       exit(EXIT_FAILURE);
