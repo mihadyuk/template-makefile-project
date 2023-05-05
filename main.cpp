@@ -25,7 +25,10 @@ public:
   void stop() {
     printf("stop ppp requested\n");
     stop_ = true;
-    while (thread_.joinable()) {}
+    while (thread_.joinable()) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(500));
+      printf("waiting for thread\n");
+    }
   }
 
 private:
@@ -178,7 +181,13 @@ private:
 };
 
 int main(int argc, char *argv[]) {
+#if 0
+  execl("/usr/bin/pppd", "/dev/ttyUSB0", "115200", "nodetach", "192.168.100.10:192.168.100.20", "nocrtscts", "noauth",
+              "local", "persist", "unit", "3", "lcp-echo-failure", "3", "lcp-echo-interval", "20",
+              "lcp-max-configure","9999", nullptr);
 
+  return 0;
+#endif
   PPP ppp1;
   ppp1.start();
 
