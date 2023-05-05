@@ -94,7 +94,8 @@ private:
           int retval = kill(pid, SIGKILL);
           printf("kill returned status: %d\n", retval);
           stop_ = false;
-          break;
+          std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+          return;
         }
 
 
