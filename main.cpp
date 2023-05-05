@@ -25,6 +25,7 @@ public:
   void stop() {
     printf("stop ppp requested\n");
     stop_ = true;
+    while (thread_.joinable()) {}
   }
 
 private:
@@ -43,6 +44,7 @@ private:
       params += "ms-dns 8.8.4.4 ";
 
       params += "nocrtscts noauth ";
+      //params += "nocrtscts ";
 
       params += "local persist unit 3 ";
       params += "lcp-echo-failure 3 lcp-echo-interval 20 ";
@@ -134,7 +136,7 @@ private:
           printf("ioctl failed\n");
         }
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       }
       // exit from parent
       close(pipe_stdout_[0]);
