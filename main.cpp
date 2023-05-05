@@ -155,10 +155,13 @@ private:
       dup2(pipe_stderr_[1], STDERR_FILENO);
       close(pipe_stderr_[0]);
       close(pipe_stderr_[1]);
-      std::string cmd("/usr/bin/pppd");
-      std::string params(buildPppParams());
-      printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
-      execl(cmd.c_str(), params.c_str(), nullptr);
+      //std::string cmd("/usr/bin/pppd");
+      //std::string params(buildPppParams());
+      //printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
+      //execl(cmd.c_str(), params.c_str(), nullptr);
+      execl("/usr/bin/pppd", "/dev/ttyUSB0", "115200", "nodetach", "192.168.100.10:192.168.100.20", "nocrtscts", "noauth",
+            "local", "persist", "unit", "3", "lcp-echo-failure", "3", "lcp-echo-interval", "20",
+            "lcp-max-configure","9999", nullptr);
       printf("failed to start pppd, error %s\n", strerror(errno));
       exit(EXIT_FAILURE);
       return;
