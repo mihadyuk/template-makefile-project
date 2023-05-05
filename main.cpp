@@ -61,15 +61,23 @@ public:
       //std::string params(buildPppParams());
       //printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
       //execl(cmd.c_str(), params.c_str(), nullptr);
+#if 1
       execl("/usr/bin/pppd", "pppd", "/dev/ttyUSB0", "115200", "nodetach", "192.168.100.10:192.168.100.20", "nocrtscts", "noauth",
             "local", "persist", "unit", "3", "lcp-echo-failure", "3", "lcp-echo-interval", "20",
             "lcp-max-configure","9999", nullptr);
+#endif
       printf("failed to start pppd, error %s\n", strerror(errno));
       exit(EXIT_FAILURE);
     }
   }
 
   void stop() {
+    pid_t pid = getpid();
+    printf("pid: 0x%.4X\n", pid);
+    if (pid == pid_) {
+      printf("stop() is called from child. exiting");
+      return;
+    }
     printf("stop ppp requested\n");
     stop_ = true;
     thread_.join();
@@ -182,6 +190,7 @@ int main(int argc, char *argv[]) {
 
   int inval;
   scanf("%d", &inval);
+  //std::this_thread::sleep_for(std::chrono::milliseconds(4000));
 
   ppp1.stop();
 
