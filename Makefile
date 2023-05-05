@@ -3,10 +3,10 @@ ifeq ($(PROJECT),)
 endif
 #DISABLE_ASSERTS		= yes
 #GPROF_EN = yes
-#LST_FILE_GEN = yes
-#DMP_FILE_GEN = yes
-#ASM_LST_FILE_GEN = yes
-#MAP_FILE_GEN     = yes
+LST_FILE_GEN = yes
+DMP_FILE_GEN = yes
+ASM_LST_FILE_GEN = yes
+MAP_FILE_GEN     = yes
 #USE_VERBOSE_COMPILE = yes
 
 #include dirs
@@ -51,7 +51,7 @@ endif
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0
+	CPPOPT = -std=c++0x -O0 -g3 -Wall -fmessage-length=0 #-fno-stack-protector
 endif	
 
 #asm options
