@@ -9,10 +9,12 @@
 #include <atomic>
 #include <chrono>
 #include <sstream>
+#include <sys/ioctl.h>
 
 class PPP {
 public:
   void start() {
+    stop_ = false;
     thread_ = std::thread(&PPP::threadFunc, this);
     std::ostringstream out;
     out << std::hex << thread_.get_id() << std::endl;
@@ -69,46 +71,67 @@ private:
     if (pid > 0) {
       // parent
       printf("fork result: 0x%.8X\n", pid);
+      std::this_thread::sleep_for(std::chrono::milliseconds(1000));
       // process stdout, stderr from child. If child is killed, exit
       int status = 0;
-      pid_t waitpid_retval = 0;
-      while ((waitpid_retval = waitpid(pid, &status, WNOHANG)) == 0) {
+      //pid_t waitpid_retval = 0;
+      //while ((waitpid_retval = waitpid(pid, &status, WNOHANG)) == 0) {
+      while (true) {
+        pid_t waitpid_retval = waitpid(pid, &status, WNOHANG);
+        printf("waitpid_retval: 0x%.8X\n", waitpid_retval);
         // do some work while child is active
         if (WIFEXITED(status)) {
           printf("child exit status: 0x%.8X\n", status);
-          break;
+          //break;
         }
         if (stop_) {
           printf("killing 0x%.8X pid\n", pid);
           int retval = kill(pid, SIGKILL);
           printf("kill returned status: %d\n", retval);
           stop_ = false;
+          break;
         }
 
 
         char buffer[128];
         // read stdout
-        memset(buffer, 0, sizeof(buffer));
-        ssize_t retval = read(pipe_stdout_[0], buffer, sizeof(buffer));
-        if (retval > 0) {
-          printf("stdout: %s\n", buffer);
-        } else if (retval == 0) {
-          printf("stdout: eof reached\n");
+        int bytesAvailable = 0;
+        if (ioctl(pipe_stdout_[0], FIONREAD, &bytesAvailable) == 0) {
+          if (bytesAvailable > 0) {
+            memset(buffer, 0, sizeof(buffer));
+            ssize_t retval = read(pipe_stdout_[0], buffer, bytesAvailable);
+            if (retval > 0) {
+              printf("stdout: %s\n", buffer);
+            } else if (retval == 0) {
+              printf("stdout: eof reached\n");
+            }
+            else {
+              printf("stdout: error reading. retval: %ld", retval);
+            }
+          }
         }
         else {
-          printf("stdout: error reading. retval: %ld", retval);
+          printf("ioctl failed\n");
         }
 
         // read stderr
-        memset(buffer, 0, sizeof(buffer));
-        retval = read(pipe_stderr_[0], buffer, sizeof(buffer));
-        if (retval > 0) {
-          printf("stderr: %s\n", buffer);
-        } else if (retval == 0) {
-          printf("stderr: eof reached\n");
+        bytesAvailable = 0;
+        if (ioctl(pipe_stderr_[0], FIONREAD, &bytesAvailable) == 0) {
+          if (bytesAvailable > 0) {
+            memset(buffer, 0, sizeof(buffer));
+            ssize_t retval = read(pipe_stderr_[0], buffer, bytesAvailable);
+            if (retval > 0) {
+              printf("stderr: %s\n", buffer);
+            } else if (retval == 0) {
+              printf("stderr: eof reached\n");
+            }
+            else {
+              printf("stderr: error reading. retval: %ld\n", retval);
+            }
+          }
         }
         else {
-          printf("stderr: error reading. retval: %ld", retval);
+          printf("ioctl failed\n");
         }
 
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -119,7 +142,8 @@ private:
       close(pipe_stderr_[0]);
       close(pipe_stderr_[1]);
       printf("normal exiting parent\n");
-      exit(EXIT_SUCCESS);
+      //exit(EXIT_SUCCESS);
+      return;
     }
     else if (pid == 0) {
       // child
@@ -129,12 +153,13 @@ private:
       dup2(pipe_stderr_[1], STDERR_FILENO);
       close(pipe_stderr_[0]);
       close(pipe_stderr_[1]);
-      std::string cmd("/usr/bin/pppd ");
+      std::string cmd("/usr/bin/pppd");
       std::string params(buildPppParams());
       printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
       execl(cmd.c_str(), params.c_str(), nullptr);
       printf("failed to start pppd, error %s\n", strerror(errno));
       exit(EXIT_FAILURE);
+      return;
     }
     else {
       printf("fork error: %d\n", pid);
