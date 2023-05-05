@@ -38,7 +38,7 @@ public:
       for (int i = 0; i < 10; i++) {
         pid_t waitpid_retval = waitpid(pid_, &status, WNOHANG);
         printf("waitpid_retval: 0x%.8X, child exit status: 0x%.8X\n", waitpid_retval, status);
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
       }
 
       // create a thread for processing stdout, stderr
@@ -73,15 +73,19 @@ public:
     printf("stop ppp requested\n");
     stop_ = true;
     thread_.join();
+    printf("stopped ppp\n");
+
+    printf("killing 0x%.8X pid\n", pid_);
+    int retval = kill(pid_, SIGKILL);
+    printf("kill returned status: %d\n", retval);
+    int status = 0;
+    pid_t waitpid_retval = waitpid(pid_, &status, 0);
+    printf("waitpid_retval: 0x%.8X, status: 0x%.8X\n", waitpid_retval, status);
 
     close(pipe_stdout_[0]);
     close(pipe_stdout_[1]);
     close(pipe_stderr_[0]);
     close(pipe_stderr_[1]);
-
-    printf("killing 0x%.8X pid\n", pid_);
-    int retval = kill(pid_, SIGKILL);
-    printf("kill returned status: %d\n", retval);
   }
 
 private:
@@ -155,13 +159,14 @@ private:
 
       std::this_thread::sleep_for(std::chrono::milliseconds(500));
     }
+    printf("exiting thread\n");
   }
 
   int pipe_stdout_[2];
   int pipe_stderr_[2];
   std::thread thread_;
   std::atomic_bool stop_;
-  pid_t pid_;
+  pid_t pid_ = -1;
 };
 
 int main(int argc, char *argv[]) {
