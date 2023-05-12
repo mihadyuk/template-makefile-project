@@ -23,8 +23,11 @@ public:
   }
   virtual ~Process() {}
 
-  void start(ThreadFunc& threadFunc, Args... args) {
+  void start(ThreadFunc threadFunc, Args... args) {
+    threadFunc_ = threadFunc;
+
     pid_ = fork();
+    printf("fork result: 0x%.8X\n", pid_);
     if (pid_ == 0) {
       // child
       int retval = threadFunc_(args...);
