@@ -23,7 +23,7 @@ int main(int argc, char *argv[]) {
 
   return 0;
 #endif
-  Process<FUNC_PTR, int> process;
+  Process process;
   process.start(&threadFunc, 1);
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   process.stop();

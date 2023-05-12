@@ -15,7 +15,6 @@
 #include <sys/wait.h>
 #include <signal.h>
 
-template<typename ThreadFunc, typename... Args>
 class Process {
 public:
   Process()
@@ -23,14 +22,14 @@ public:
   }
   virtual ~Process() {}
 
+  template<typename ThreadFunc, typename... Args>
   void start(ThreadFunc threadFunc, Args... args) {
-    threadFunc_ = threadFunc;
 
     pid_ = fork();
     printf("fork result: 0x%.8X\n", pid_);
     if (pid_ == 0) {
       // child
-      int retval = threadFunc_(args...);
+      int retval = threadFunc(args...);
       exit(retval);
     }
   }
@@ -44,7 +43,7 @@ public:
     printf("waitpid_retval: 0x%.8X, status: 0x%.8X\n", waitpid_retval, status);
   }
 private:
-  ThreadFunc threadFunc_;
+  //ThreadFunc threadFunc_;
   pid_t pid_ = -1;
 };
 
