@@ -7,11 +7,11 @@
 
 typedef int (*FUNC_PTR)(int val);
 int threadFunc(int val) {
-  while (true) {
+  //while (true) {
     printf("threadFunc val: %d\n", val);
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  }
-  return 1;
+  //}
+  return val;
 }
 
 
@@ -24,8 +24,12 @@ int main(int argc, char *argv[]) {
   return 0;
 #endif
   Process<FUNC_PTR, int> process;
-  process.start(&threadFunc, 123);
-  std::this_thread::sleep_for(std::chrono::milliseconds(4000));
+  process.start(&threadFunc, 1);
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+  process.stop();
+
+  process.start(&threadFunc, 0);
+  std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   process.stop();
 
   return 0;
