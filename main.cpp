@@ -6,11 +6,12 @@
 #include "process.h"
 
 typedef int (*FUNC_PTR)(int val);
-int threadFunc(int val) {
-  //while (true) {
+int threadFunc(Process &process, int val) {
+  while (process.isStopRequested() == false) {
     printf("threadFunc val: %d\n", val);
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-  //}
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+  }
+  printf("exiting thread func with value %d\n", val);
   return val;
 }
 
@@ -24,11 +25,11 @@ int main(int argc, char *argv[]) {
   return 0;
 #endif
   Process process;
-  process.start(&threadFunc, 1);
+  process.start(&threadFunc, process, 1);
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   process.stop();
 
-  process.start(&threadFunc, 0);
+  process.start(&threadFunc, process, 0);
   std::this_thread::sleep_for(std::chrono::milliseconds(2000));
   process.stop();
 
