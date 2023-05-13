@@ -37,8 +37,12 @@ public:
     void *shm = shmat(shmid_, nullptr, 0);
     if (shm == reinterpret_cast<void *>(-1)) {
       printf("unable to attach shared mem. errno: %s\n", strerror(errno));
+      int retval = shmctl(shmid_, IPC_RMID, NULL);
+      if (retval < 0) {
+        printf("unable to remove shmid\n");
+      }
       //close(shmid_);
-      //shmid_ = -1;
+      shmid_ = -1;
       return;
     }
     sharedMemParent_ = shm;
@@ -92,14 +96,18 @@ public:
       printf("shared mem is already freed in parent.\n");
       return;
     }
-    int retval_dt = shmdt(sharedMemParent_);
-    if (retval_dt < 0) {
-      printf("unable to detach shared mem in parent. error: %d\n", retval_dt);
-    } else if (retval_dt == 0) {
+    retval = shmdt(sharedMemParent_);
+    if (retval < 0) {
+      printf("unable to detach shared mem in parent. error: %d\n", retval);
+    } else if (retval == 0) {
       sharedMemParent_ = nullptr;
     }
     //close(shmid_);
-    //shmid_ = -1;
+    retval = shmctl(shmid_, IPC_RMID, NULL);
+    if (retval < 0) {
+      printf("unable to remove shmid\n");
+    }
+    shmid_ = -1;
   }
 
   bool isStopRequested() const;
