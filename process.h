@@ -63,7 +63,7 @@ public:
       printf("shared mem child: %p\n", sharedMemChild_);
 
       // exec thread func
-      int retval = threadFunc(*this, args...);
+      int retval = threadFunc(static_cast<const Process&>(*this), args...);
 
       // detach shared mem
       int retval_dt = shmdt(sharedMemChild_);
