@@ -5,8 +5,8 @@
  *      Author: user
  */
 
-#ifndef PROCESS_H_
-#define PROCESS_H_
+#ifndef PROCESSPARENT_H_
+#define PROCESSPARENT_H_
 #include <utility>
 #include <string.h>
 #include <errno.h>
@@ -20,10 +20,12 @@
 #include <chrono>
 #include <thread>
 
-class Process {
+#include "processchild.h"
+
+class ProcessParent {
 public:
-  Process() = default;
-  virtual ~Process();
+  ProcessParent() = default;
+  virtual ~ProcessParent();
 
   template<typename ThreadFunc, typename... Args>
   void start(ThreadFunc threadFunc, Args... args) {
@@ -59,18 +61,16 @@ public:
         printf("unable to attach shared mem in child. errno: %s. exiting child process\n", strerror(errno));
         exit(EXIT_FAILURE);
       }
-      sharedMemChild_ = shm;
-      printf("shared mem child: %p\n", sharedMemChild_);
+      printf("shared mem child: %p\n", shm);
+      ProcessChild processChild(shm, sharedMemPageSize_);
 
       // exec thread func
-      int retval = threadFunc(static_cast<const Process&>(*this), args...);
+      int retval = threadFunc(processChild, args...);
 
       // detach shared mem
-      int retval_dt = shmdt(sharedMemChild_);
+      int retval_dt = shmdt(shm);
       if (retval_dt < 0) {
         printf("unable to detach shared mem in child. error: %d\n", retval_dt);
-      } else if (retval_dt == 0) {
-        sharedMemChild_ = nullptr;
       }
       exit(retval);
     }
@@ -110,7 +110,7 @@ public:
     shmid_ = -1;
   }
 
-  bool isStopRequested() const;
+
 
 private:
   static constexpr size_t sharedMemPageSize_ = 4096;
@@ -119,10 +119,8 @@ private:
 
   //ThreadFunc threadFunc_;
   pid_t pid_ = -1;
-  void *sharedMemChild_ = nullptr;
   void *sharedMemParent_ = nullptr;
-  size_t sharedMemSize_  = 0;
   int shmid_ = -1;
 };
 
-#endif /* PROCESS_H_ */
+#endif /* PROCESSPARENT_H_ */
