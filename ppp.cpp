@@ -182,8 +182,10 @@ int PPP::threadFunc(PPP &self, ProcessChild &processChild) {
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    //usleep(50000UL);
   }
   printf("exiting thread\n");
+  //sleep(5);
   //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   return 0;
