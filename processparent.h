@@ -31,19 +31,15 @@ public:
   void start(ThreadFunc threadFunc, Args... args) {
 
     // initialize shared memory for parent
-    shmid_ = shmget(IPC_PRIVATE, sharedMemPageSize_, IPC_CREAT | 0x600 | IPC_EXCL);
+    shmid_ = sharedMemInit(sharedMemPageSize_);
     if (shmid_ < 0) {
       printf("unable to create shared mem. shmid: %d, errno: %s\n", shmid_, strerror(errno));
       return;
     }
-    void *shm = shmat(shmid_, nullptr, 0);
-    if (shm == reinterpret_cast<void *>(-1)) {
+    void *shm = sharedMemAttach(shmid_);
+    if (isSharedMemValid(shm) == false) {
       printf("unable to attach shared mem. errno: %s\n", strerror(errno));
-      int retval = shmctl(shmid_, IPC_RMID, NULL);
-      if (retval < 0) {
-        printf("unable to remove shmid\n");
-      }
-      //close(shmid_);
+      sharedMemDeinit(shmid_);
       shmid_ = -1;
       return;
     }
@@ -55,9 +51,8 @@ public:
     printf("fork result: 0x%.8X\n", pid_);
     if (pid_ == 0) {
       // child
-      // attach shared mem
-      void *shm = shmat(shmid_, nullptr, 0);
-      if (shm == reinterpret_cast<void *>(-1)) {
+      void *shm = sharedMemAttach(shmid_);
+      if (isSharedMemValid(shm) == false) {
         printf("unable to attach shared mem in child. errno: %s. exiting child process\n", strerror(errno));
         exit(EXIT_FAILURE);
       }
@@ -67,11 +62,7 @@ public:
       // exec thread func
       int retval = threadFunc(processChild, args...);
 
-      // detach shared mem
-      int retval_dt = shmdt(shm);
-      if (retval_dt < 0) {
-        printf("unable to detach shared mem in child. error: %d\n", retval_dt);
-      }
+      sharedMemDetach(shm);
       exit(retval);
     }
   }
@@ -96,17 +87,10 @@ public:
       printf("shared mem is already freed in parent.\n");
       return;
     }
-    retval = shmdt(sharedMemParent_);
-    if (retval < 0) {
-      printf("unable to detach shared mem in parent. error: %d\n", retval);
-    } else if (retval == 0) {
-      sharedMemParent_ = nullptr;
-    }
-    //close(shmid_);
-    retval = shmctl(shmid_, IPC_RMID, NULL);
-    if (retval < 0) {
-      printf("unable to remove shmid\n");
-    }
+    sharedMemDetach(sharedMemParent_);
+    sharedMemParent_ = nullptr;
+
+    sharedMemDeinit(shmid_);
     shmid_ = -1;
   }
 
@@ -115,6 +99,11 @@ public:
 private:
   static constexpr size_t sharedMemPageSize_ = 4096;
   void requestStop();
+  static int sharedMemInit(size_t pageSize);
+  static void sharedMemDeinit(int shmid);
+  static void *sharedMemAttach(int shmid);
+  static void sharedMemDetach(void *sharedMem);
+  static bool isSharedMemValid(const void *sharedMem);
 
 
   //ThreadFunc threadFunc_;
