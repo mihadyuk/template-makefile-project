@@ -52,8 +52,7 @@ void PPP::start() {
     }
     //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     // create a thread for processing stdout, stderr
-    //process_.start<int(*)(ProcessChild &, PPP &), PPP &>(&PPP::threadFunc, *this);
-    process_.start<int(*)(ProcessChild &, PPP &), PPP &>(&PPP::threadFunc, *this);
+    process_.start<int(*)(PPP &, ProcessChild &), PPP &>(&PPP::threadFunc, *this);
     return;
   }
   else if (pid_ == 0) {
@@ -68,12 +67,12 @@ void PPP::start() {
     //std::string params(buildPppParams());
     //printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
     //execl(cmd.c_str(), params.c_str(), nullptr);
-  #if 0
+  #if 1
     execl("/usr/bin/pppd", "pppd", "/dev/ttyUSB0", "115200", "nodetach", "192.168.100.10:192.168.100.20", "nocrtscts", "noauth",
           "local", "persist", "unit", "3", "lcp-echo-failure", "3", "lcp-echo-interval", "20",
           "lcp-max-configure","9999", nullptr);
   #endif
-  #if 1
+  #if 0
     //static char *params[3 + 1] = {"ls", "-lah", "/tmp", nullptr};
     static char *params[3 + 1] = {nullptr};
     asprintf(&params[0], "ls");
@@ -138,7 +137,7 @@ std::string PPP::buildPppParams() {
     return params;
 }
 
-int PPP::threadFunc(ProcessChild &processChild, PPP &self) {
+int PPP::threadFunc(PPP &self, ProcessChild &processChild) {
   char buffer[128];
 
   while (processChild.isStopRequested() == false) {

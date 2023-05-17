@@ -24,7 +24,7 @@ public:
   void stop();
 
 private:
-  static int threadFunc(ProcessChild &processChild, PPP &self);
+  static int threadFunc(PPP &self, ProcessChild &processChild);
   std::string buildPppParams();
 
   ProcessParent process_;
