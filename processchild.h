@@ -17,7 +17,7 @@ public:
 private:
   ProcessChild(void *sharedMem, size_t sharedMemSize);
 
-  void *sharedMem_      = reinterpret_cast<void *>(-1);
+  void *sharedMem_      = nullptr;
   size_t sharedMemSize_ = 0;
 
   friend class ProcessParent;
