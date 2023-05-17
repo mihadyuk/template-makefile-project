@@ -52,3 +52,16 @@ void ProcessParent::sharedMemDetach(void *sharedMem) {
 bool ProcessParent::isSharedMemValid(const void *sharedMem) {
   return sharedMem != reinterpret_cast<void *>(-1);
 }
+
+void ProcessParent::freeSharedMemResources() {
+  // free shared mem resources
+  if (sharedMemParent_ == nullptr) {
+    printf("shared mem is already freed in parent.\n");
+    return;
+  }
+  sharedMemDetach(sharedMemParent_);
+  sharedMemParent_ = nullptr;
+
+  sharedMemDeinit(shmid_);
+  shmid_ = -1;
+}

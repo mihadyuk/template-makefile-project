@@ -21,6 +21,7 @@
 #include <thread>
 
 #include "processchild.h"
+#include "timeElapsed.h"
 
 class ProcessParent {
 public:
@@ -74,36 +75,73 @@ public:
     }
     requestStop();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+    // wait for some time to complete the child process
+    // then terminate if the child does not respond
+    TimeElapsed timeElapsed;
+    timeElapsed.start();
+    while (timeElapsed.isElapsedMilliseconds(timeoutCloseChildMs_) == false) {
+      int status = 0;
+      pid_t retval = waitpid(pid_, &status, WNOHANG);
+      if (retval == -1) {
+        printf("waitpid returned -1 for child 0x%.8X. errno: %s\n", pid_, strerror(errno));
+        pid_ = -1;
+        freeSharedMemResources();
+        return;
+      }
+      if (WIFEXITED(status)) {
+        printf("child 0x%.8X normally exited with code %d\n", pid_, WEXITSTATUS(status));
+        pid_ = -1;
+        freeSharedMemResources();
+        return;
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+
+    // child didn't answer on time. kill child forcibly
+    // wait some time for exiting child by kill
     printf("killing 0x%.8X pid\n", pid_);
     int retval = kill(pid_, SIGKILL);
-    printf("kill returned status: %d\n", retval);
-    int status = 0;
-    pid_t waitpid_retval = waitpid(pid_, &status, 0);
-    printf("waitpid_retval: 0x%.8X, status: 0x%.8X\n", waitpid_retval, status);
-
-    // free shared mem resources
-    if (sharedMemParent_ == nullptr) {
-      printf("shared mem is already freed in parent.\n");
+    if (retval == -1) {
+      printf("kill returned status: %d. errno: %s\n", retval, strerror(errno));
+      pid_ = -1;
+      freeSharedMemResources();
       return;
     }
-    sharedMemDetach(sharedMemParent_);
-    sharedMemParent_ = nullptr;
-
-    sharedMemDeinit(shmid_);
-    shmid_ = -1;
+    timeElapsed.start();
+    while (timeElapsed.isElapsedMilliseconds(timeoutCloseChildMs_) == false) {
+      int status = 0;
+      pid_t retval = waitpid(pid_, &status, WNOHANG);
+      if (retval == -1) {
+        printf("waitpid returned -1 for child 0x%.8X. errno: %s\n", pid_, strerror(errno));
+        break;
+      }
+      if (WIFEXITED(status)) {
+        printf("child 0x%.8X normally exited with code %d\n", pid_, WEXITSTATUS(status));
+        break;
+      }
+      else if (WIFSIGNALED(status)) {
+        printf("killed by signal %d\n", WTERMSIG(status));
+        break;
+      }
+      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+    printf("exiting stop\n");
+    pid_ = -1;
+    freeSharedMemResources();
   }
 
 
 
 private:
   static constexpr size_t sharedMemPageSize_ = 4096;
+  static constexpr uint32_t timeoutCloseChildMs_ = 2000;
   void requestStop();
   static int sharedMemInit(size_t pageSize);
   static void sharedMemDeinit(int shmid);
   static void *sharedMemAttach(int shmid);
   static void sharedMemDetach(void *sharedMem);
   static bool isSharedMemValid(const void *sharedMem);
+  void freeSharedMemResources();
 
 
   //ThreadFunc threadFunc_;
