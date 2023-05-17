@@ -7,7 +7,7 @@
 #include "ppp.h"
 
 
-int threadFunc(ProcessChild &process, int val) {
+int threadFunc(int val, ProcessChild &process) {
   while (process.isStopRequested() == false) {
     printf("threadFunc val: %d\n", val);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));

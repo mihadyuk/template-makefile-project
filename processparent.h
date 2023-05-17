@@ -60,7 +60,7 @@ public:
       ProcessChild processChild(shm, sharedMemPageSize_);
 
       // exec thread func
-      int retval = threadFunc(processChild, args...);
+      int retval = threadFunc(args..., processChild);
 
       sharedMemDetach(shm);
       exit(retval);
