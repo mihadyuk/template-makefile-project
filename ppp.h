@@ -12,6 +12,8 @@
 #include <string>
 #include <thread>
 
+#include "processparent.h"
+
 
 class PPP {
 public:
@@ -22,12 +24,12 @@ public:
   void stop();
 
 private:
-  void threadFunc();
+  static int threadFunc(ProcessChild &processChild, PPP &self);
   std::string buildPppParams();
 
+  ProcessParent process_;
   int pipe_stdout_[2];
   int pipe_stderr_[2];
-  std::thread thread_;
   std::atomic_bool stop_;
   pid_t pid_ = -1;
 };

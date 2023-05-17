@@ -52,11 +52,8 @@ void PPP::start() {
     }
     //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     // create a thread for processing stdout, stderr
-    thread_ = std::thread(&PPP::threadFunc, this);
-    std::ostringstream out;
-    out << std::hex << thread_.get_id() << std::endl;
-    std::string out_str = out.str();
-    printf("thread id: %s\n", out_str.c_str());
+    //process_.start<int(*)(ProcessChild &, PPP &), PPP &>(&PPP::threadFunc, *this);
+    process_.start<int(*)(ProcessChild &, PPP &), PPP &>(&PPP::threadFunc, *this);
     return;
   }
   else if (pid_ == 0) {
@@ -100,8 +97,8 @@ void PPP::stop() {
     return;
   }
   printf("stop ppp requested\n");
-  stop_ = true;
-  thread_.join();
+  process_.stop();
+
   printf("stopped ppp\n");
 
   printf("killing 0x%.8X pid\n", pid_);
@@ -141,16 +138,16 @@ std::string PPP::buildPppParams() {
     return params;
 }
 
-void PPP::threadFunc() {
+int PPP::threadFunc(ProcessChild &processChild, PPP &self) {
   char buffer[128];
 
-  while (stop_ == false) {
+  while (processChild.isStopRequested() == false) {
     // read stdout
     int bytesAvailable = 0;
-    if (ioctl(pipe_stdout_[0], FIONREAD, &bytesAvailable) == 0) {
+    if (ioctl(self.pipe_stdout_[0], FIONREAD, &bytesAvailable) == 0) {
       if (bytesAvailable > 0) {
         memset(buffer, 0, sizeof(buffer));
-        ssize_t retval = read(pipe_stdout_[0], buffer, bytesAvailable);
+        ssize_t retval = read(self.pipe_stdout_[0], buffer, bytesAvailable);
         if (retval > 0) {
           printf("stdout: %s\n", buffer);
         } else if (retval == 0) {
@@ -167,10 +164,10 @@ void PPP::threadFunc() {
 
     // read stderr
     bytesAvailable = 0;
-    if (ioctl(pipe_stderr_[0], FIONREAD, &bytesAvailable) == 0) {
+    if (ioctl(self.pipe_stderr_[0], FIONREAD, &bytesAvailable) == 0) {
       if (bytesAvailable > 0) {
         memset(buffer, 0, sizeof(buffer));
-        ssize_t retval = read(pipe_stderr_[0], buffer, bytesAvailable);
+        ssize_t retval = read(self.pipe_stderr_[0], buffer, bytesAvailable);
         if (retval > 0) {
           printf("stderr: %s\n", buffer);
         } else if (retval == 0) {
@@ -188,5 +185,7 @@ void PPP::threadFunc() {
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
   printf("exiting thread\n");
+
+  return 0;
 }
 
