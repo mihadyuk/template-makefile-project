@@ -30,7 +30,6 @@ private:
   ProcessParent process_;
   int pipe_stdout_[2];
   int pipe_stderr_[2];
-  std::atomic_bool stop_;
   pid_t pid_ = -1;
 };
 

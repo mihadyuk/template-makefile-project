@@ -24,7 +24,6 @@ PPP::~PPP() {
 
 
 void PPP::start() {
-  stop_ = false;
 
   // create a pipe for stdout, stderr
   int retval = pipe(pipe_stdout_);
@@ -52,7 +51,8 @@ void PPP::start() {
     }
     //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     // create a thread for processing stdout, stderr
-    process_.start<int(*)(PPP &, ProcessChild &), PPP &>(&PPP::threadFunc, *this);
+    //process_.start<int(*)(PPP &, ProcessChild &), PPP &>(&PPP::threadFunc, *this);
+    process_.start(&PPP::threadFunc, *this);
     return;
   }
   else if (pid_ == 0) {
