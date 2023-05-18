@@ -12,6 +12,8 @@ int threadFunc(int val, ProcessChild &process) {
     printf("threadFunc val: %d\n", val);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
   }
+  //printf("exiting main loop\n");
+  //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
   printf("exiting thread func with value %d\n", val);
   return val;
 }
