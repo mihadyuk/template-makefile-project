@@ -79,20 +79,10 @@ public:
     // wait for some time to complete the child process
     // then terminate if the child does not respond
     WaitProcessCompletionResult retval = waitProcessCompletion(pid_, timeoutCloseChildMs_);
-    if (retval.first == WaitpidResult::Error) {
-      printf("waitpid returned -1 for child 0x%.8X. errno: %s\n", pid_, strerror(errno));
+    if (retval.first == WaitpidResult::Error || retval.first == WaitpidResult::NormalExit) {
       pid_ = -1;
       freeSharedMemResources();
       return;
-    }
-    else if (retval.first == WaitpidResult::NormalExit) {
-      printf("child 0x%.8X normally exited with code %d. status: 0x%.8X\n", pid_, WEXITSTATUS(*retval.second), *retval.second);
-      pid_ = -1;
-      freeSharedMemResources();
-      return;
-    }
-    else if (retval.first == WaitpidResult::Timeout) {
-      printf("timeout %u ms. try to kill 0x%.8X process \n", timeoutCloseChildMs_, pid_);
     }
 
     // child didn't answer on time. kill child forcibly
@@ -106,7 +96,8 @@ public:
       return;
     }
 
-    retval = waitProcessCompletion(pid_, timeoutCloseChildMs_);
+    waitProcessCompletion(pid_, timeoutCloseChildMs_);
+#if 0
     if (retval.first == WaitpidResult::Error) {
       printf("waitpid returned -1 for child 0x%.8X. errno: %s\n", pid_, strerror(errno));
     }
@@ -116,7 +107,7 @@ public:
     else if (retval.first == WaitpidResult::KilledBySignal) {
       printf("process 0x%.8X killed by signal %d. status: 0x%.8X\n", pid_, WTERMSIG(*retval.second), *retval.second);
     }
-
+#endif
     printf("exiting stop\n");
     pid_ = -1;
     freeSharedMemResources();

@@ -26,6 +26,6 @@ enum class WaitpidResult {
  * */
 using WaitProcessCompletionResult = std::pair<WaitpidResult, std::optional<int>>;
 
-[[nodiscard]] WaitProcessCompletionResult waitProcessCompletion(pid_t pid, uint32_t timeoutMs);
+WaitProcessCompletionResult waitProcessCompletion(pid_t pid, uint32_t timeoutMs);
 
 #endif /* UTILS_H_ */

@@ -37,6 +37,7 @@ WaitProcessCompletionResult waitProcessCompletion(pid_t pid, uint32_t timeoutMs)
     //printf("child status is not changed. retval: 0x%.8X\n", retval);
     std::this_thread::sleep_for(std::chrono::milliseconds(10));
   }
+  printf("timeout %u ms for waiting 0x%.8X process \n", timeoutMs, pid);
   return WaitProcessCompletionResult(WaitpidResult::Timeout, std::optional<int>());
 }
 
