@@ -88,12 +88,15 @@ public:
         freeSharedMemResources();
         return;
       }
-      if (WIFEXITED(status)) {
-        printf("child 0x%.8X normally exited with code %d\n", pid_, WEXITSTATUS(status));
-        pid_ = -1;
-        freeSharedMemResources();
-        return;
+      else if (retval == pid_) {
+        if (WIFEXITED(status)) {
+          printf("child 0x%.8X normally exited with code %d. status: 0x%.8X\n", pid_, WEXITSTATUS(status), status);
+          pid_ = -1;
+          freeSharedMemResources();
+          return;
+        }
       }
+      //printf("child status is not changed. retval: 0x%.8X\n", retval);
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 
@@ -115,13 +118,15 @@ public:
         printf("waitpid returned -1 for child 0x%.8X. errno: %s\n", pid_, strerror(errno));
         break;
       }
-      if (WIFEXITED(status)) {
-        printf("child 0x%.8X normally exited with code %d\n", pid_, WEXITSTATUS(status));
-        break;
-      }
-      else if (WIFSIGNALED(status)) {
-        printf("killed by signal %d\n", WTERMSIG(status));
-        break;
+      else if (retval == pid_) {
+        if (WIFEXITED(status)) {
+          printf("child 0x%.8X normally exited with code %d. status: 0x%.8X\n", pid_, WEXITSTATUS(status), status);
+          break;
+        }
+        else if (WIFSIGNALED(status)) {
+          printf("killed by signal %d. status: 0x%.8X\n", WTERMSIG(status), status);
+          break;
+        }
       }
       std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
