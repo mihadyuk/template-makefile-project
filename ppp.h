@@ -24,13 +24,14 @@ public:
   void stop();
 
 private:
-  static int threadFunc(PPP &self, ProcessChild &processChild);
+  static int threadFuncStdStreams(PPP &self, ProcessChild &processChild);
+  static int threadFuncPpp(PPP &self, ProcessChild &processChild);
   std::string buildPppParams();
 
-  ProcessParent process_;
+  ProcessParent procStdStreams_;
+  ProcessParent procPpp_;
   int pipe_stdout_[2];
   int pipe_stderr_[2];
-  pid_t pid_ = -1;
 };
 
 

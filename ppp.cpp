@@ -38,74 +38,15 @@ void PPP::start() {
     close(pipe_stdout_[1]);
     return;
   }
-
-  pid_ = fork();
-  printf("fork result: 0x%.8X\n", pid_);
-  if (pid_ > 0) {
-    // parent
-    int status = 0;
-    for (int i = 0; i < 10; i++) {
-      pid_t waitpid_retval = waitpid(pid_, &status, WNOHANG);
-      printf("waitpid_retval: 0x%.8X, child exit status: 0x%.8X\n", waitpid_retval, status);
-      std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    }
-    //std::this_thread::sleep_for(std::chrono::milliseconds(3000));
-    // create a thread for processing stdout, stderr
-    //process_.start<int(*)(PPP &, ProcessChild &), PPP &>(&PPP::threadFunc, *this);
-    process_.start(&PPP::threadFunc, *this);
-    return;
-  }
-  else if (pid_ == 0) {
-    // child
-    dup2(pipe_stdout_[1], STDOUT_FILENO);
-    close(pipe_stdout_[0]);
-    close(pipe_stdout_[1]);
-    dup2(pipe_stderr_[1], STDERR_FILENO);
-    close(pipe_stderr_[0]);
-    close(pipe_stderr_[1]);
-    //std::string cmd("/usr/bin/pppd");
-    //std::string params(buildPppParams());
-    //printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
-    //execl(cmd.c_str(), params.c_str(), nullptr);
-  #if 1
-    execl("/usr/bin/pppd", "pppd", "/dev/ttyUSB0", "115200", "nodetach", "192.168.100.10:192.168.100.20", "nocrtscts", "noauth",
-          "local", "persist", "unit", "3", "lcp-echo-failure", "3", "lcp-echo-interval", "20",
-          "lcp-max-configure","9999", nullptr);
-  #endif
-  #if 0
-    //static char *params[3 + 1] = {"ls", "-lah", "/tmp", nullptr};
-    static char *params[3 + 1] = {nullptr};
-    asprintf(&params[0], "ls");
-    asprintf(&params[1], "-lah");
-    asprintf(&params[2], "/tmp");
-    int retval = execvp("ls", params);
-    printf("execvp returned %d\n", retval);
-    exit(errno);
-    //return;
-  #endif
-    printf("failed to start pppd, error %s\n", strerror(errno));
-    exit(EXIT_FAILURE);
-  }
+  procPpp_.start(&PPP::threadFuncPpp, *this);
+  procStdStreams_.start(&PPP::threadFuncStdStreams, *this);
 }
 
 void PPP::stop() {
-  pid_t pid = getpid();
-  printf("pid: 0x%.4X\n", pid);
-  if (pid == pid_) {
-    printf("stop() is called from child. exiting");
-    return;
-  }
   printf("stop ppp requested\n");
-  process_.stop();
-
-  printf("stopped ppp\n");
-
-  printf("killing 0x%.8X pid\n", pid_);
-  int retval = kill(pid_, SIGKILL);
-  printf("kill returned status: %d\n", retval);
-  int status = 0;
-  pid_t waitpid_retval = waitpid(pid_, &status, 0);
-  printf("waitpid_retval: 0x%.8X, status: 0x%.8X\n", waitpid_retval, status);
+  procStdStreams_.stop();
+  procPpp_.stop();
+  printf("stopped ppp \n");
 
   close(pipe_stdout_[0]);
   close(pipe_stdout_[1]);
@@ -137,7 +78,7 @@ std::string PPP::buildPppParams() {
     return params;
 }
 
-int PPP::threadFunc(PPP &self, ProcessChild &processChild) {
+int PPP::threadFuncStdStreams(PPP &self, ProcessChild &processChild) {
   char buffer[128];
 
   while (processChild.isStopRequested() == false) {
@@ -181,7 +122,7 @@ int PPP::threadFunc(PPP &self, ProcessChild &processChild) {
       printf("ioctl failed\n");
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     //usleep(50000UL);
   }
   printf("exiting thread\n");
@@ -189,5 +130,36 @@ int PPP::threadFunc(PPP &self, ProcessChild &processChild) {
   //std::this_thread::sleep_for(std::chrono::milliseconds(5000));
 
   return 0;
+}
+
+int PPP::threadFuncPpp(PPP &self, ProcessChild &processChild) {
+  dup2(self.pipe_stdout_[1], STDOUT_FILENO);
+  close(self.pipe_stdout_[0]);
+  close(self.pipe_stdout_[1]);
+  dup2(self.pipe_stderr_[1], STDERR_FILENO);
+  close(self.pipe_stderr_[0]);
+  close(self.pipe_stderr_[1]);
+  //std::string cmd("/usr/bin/pppd");
+  //std::string params(buildPppParams());
+  //printf("executing cmd: %s, params: %s \n", cmd.c_str(), params.c_str());
+  //execl(cmd.c_str(), params.c_str(), nullptr);
+#if 1
+  execl("/usr/bin/pppd", "pppd", "/dev/ttyUSB0", "115200", "nodetach", "192.168.100.10:192.168.100.20", "nocrtscts", "noauth",
+        "local", "persist", "unit", "3", "lcp-echo-failure", "3", "lcp-echo-interval", "20",
+        "lcp-max-configure","9999", nullptr);
+#endif
+#if 0
+  //static char *params[3 + 1] = {"ls", "-lah", "/tmp", nullptr};
+  static char *params[3 + 1] = {nullptr};
+  asprintf(&params[0], "ls");
+  asprintf(&params[1], "-lah");
+  asprintf(&params[2], "/tmp");
+  int retval = execvp("ls", params);
+  printf("execvp returned %d\n", retval);
+  exit(errno);
+  //return;
+#endif
+  printf("failed to start pppd, error %s\n", strerror(errno));
+  exit(EXIT_FAILURE);
 }
 
