@@ -43,8 +43,9 @@ void PPP::start() {
 }
 
 void PPP::stop() {
-  printf("stop ppp requested\n");
+  printf("stopping stdstreams\n");
   procStdStreams_.stop();
+  printf("stopping ppp\n");
   procPpp_.stop();
   printf("stopped ppp \n");
 
@@ -99,7 +100,7 @@ int PPP::threadFuncStdStreams(PPP &self, ProcessChild &processChild) {
       }
     }
     else {
-      printf("ioctl failed\n");
+      printf("stdout ioctl failed\n");
     }
 
     // read stderr
@@ -119,7 +120,7 @@ int PPP::threadFuncStdStreams(PPP &self, ProcessChild &processChild) {
       }
     }
     else {
-      printf("ioctl failed\n");
+      printf("stderr ioctl failed\n");
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
