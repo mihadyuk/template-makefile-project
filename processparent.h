@@ -22,6 +22,7 @@
 
 #include "processchild.h"
 #include "timeElapsed.h"
+#include "utils.h"
 
 class ProcessParent {
 public:
@@ -77,59 +78,45 @@ public:
 
     // wait for some time to complete the child process
     // then terminate if the child does not respond
-    TimeElapsed timeElapsed;
-    timeElapsed.start();
-    while (timeElapsed.isElapsedMilliseconds(timeoutCloseChildMs_) == false) {
-      int status = 0;
-      pid_t retval = waitpid(pid_, &status, WNOHANG);
-      if (retval == -1) {
-        printf("waitpid returned -1 for child 0x%.8X. errno: %s\n", pid_, strerror(errno));
-        pid_ = -1;
-        freeSharedMemResources();
-        return;
-      }
-      else if (retval == pid_) {
-        if (WIFEXITED(status)) {
-          printf("child 0x%.8X normally exited with code %d. status: 0x%.8X\n", pid_, WEXITSTATUS(status), status);
-          pid_ = -1;
-          freeSharedMemResources();
-          return;
-        }
-      }
-      //printf("child status is not changed. retval: 0x%.8X\n", retval);
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    WaitProcessCompletionResult retval = waitProcessCompletion(pid_, timeoutCloseChildMs_);
+    if (retval.first == WaitpidResult::Error) {
+      printf("waitpid returned -1 for child 0x%.8X. errno: %s\n", pid_, strerror(errno));
+      pid_ = -1;
+      freeSharedMemResources();
+      return;
+    }
+    else if (retval.first == WaitpidResult::NormalExit) {
+      printf("child 0x%.8X normally exited with code %d. status: 0x%.8X\n", pid_, WEXITSTATUS(*retval.second), *retval.second);
+      pid_ = -1;
+      freeSharedMemResources();
+      return;
+    }
+    else if (retval.first == WaitpidResult::Timeout) {
+      printf("timeout %u ms. try to kill 0x%.8X process \n", timeoutCloseChildMs_, pid_);
     }
 
     // child didn't answer on time. kill child forcibly
     // wait some time for exiting child by kill
     printf("killing 0x%.8X pid\n", pid_);
-    int retval = kill(pid_, SIGKILL);
-    if (retval == -1) {
-      printf("kill returned status: %d. errno: %s\n", retval, strerror(errno));
+    int kill_retval = kill(pid_, SIGKILL);
+    if (kill_retval == -1) {
+      printf("kill returned status: %d. errno: %s\n", kill_retval, strerror(errno));
       pid_ = -1;
       freeSharedMemResources();
       return;
     }
-    timeElapsed.start();
-    while (timeElapsed.isElapsedMilliseconds(timeoutCloseChildMs_) == false) {
-      int status = 0;
-      pid_t retval = waitpid(pid_, &status, WNOHANG);
-      if (retval == -1) {
-        printf("waitpid returned -1 for child 0x%.8X. errno: %s\n", pid_, strerror(errno));
-        break;
-      }
-      else if (retval == pid_) {
-        if (WIFEXITED(status)) {
-          printf("child 0x%.8X normally exited with code %d. status: 0x%.8X\n", pid_, WEXITSTATUS(status), status);
-          break;
-        }
-        else if (WIFSIGNALED(status)) {
-          printf("killed by signal %d. status: 0x%.8X\n", WTERMSIG(status), status);
-          break;
-        }
-      }
-      std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+    retval = waitProcessCompletion(pid_, timeoutCloseChildMs_);
+    if (retval.first == WaitpidResult::Error) {
+      printf("waitpid returned -1 for child 0x%.8X. errno: %s\n", pid_, strerror(errno));
     }
+    else if (retval.first == WaitpidResult::NormalExit) {
+      printf("child 0x%.8X normally exited with code %d. status: 0x%.8X\n", pid_, WEXITSTATUS(*retval.second), *retval.second);
+    }
+    else if (retval.first == WaitpidResult::KilledBySignal) {
+      printf("process 0x%.8X killed by signal %d. status: 0x%.8X\n", pid_, WTERMSIG(*retval.second), *retval.second);
+    }
+
     printf("exiting stop\n");
     pid_ = -1;
     freeSharedMemResources();
