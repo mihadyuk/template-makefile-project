@@ -1,12 +1,13 @@
 /*
  * memallocMain.cpp
  *
- *  Created on: 27 èþí. 2018 ã.
+ *  Created on: 27 ï¿½ï¿½ï¿½. 2018 ï¿½.
  *      Author: Andrey
  */
 #include <new>
 #include <iostream>
 #include <stdlib.h>
+#include <stdint.h>
 #include <assert.h>
 #include "memallocMain.h"
 

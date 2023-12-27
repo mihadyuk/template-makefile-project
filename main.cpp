@@ -17,6 +17,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <atomic>
+#include <thread>
 
 static std::mutex g_mutex;
 static std::condition_variable g_cv;
