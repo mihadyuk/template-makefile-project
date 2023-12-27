@@ -12,7 +12,7 @@
 
 
 
-static Array<uint32_t, 10> g_array;
+//static Array<uint32_t, 10> g_array;
 
 static void func1(int value) {
     printf("func1 value: %d\n", value);
@@ -27,8 +27,8 @@ void templateUnit1() {
     Callback<std::function<void(int)>, int> callbacks;
     std::function<void(int)> fn1(func1);
     std::function<void(int)> fn2(std::bind(&func1, std::placeholders::_1));
-    auto ptr1 = fn1.target<void(*)(int)>();
-    auto ptr2 = fn2.target<std::function<void(int)>>();
+    //auto ptr1 = fn1.target<void(*)(int)>();
+    //auto ptr2 = fn2.target<std::function<void(int)>>();
     callbacks.add(func1);
     callbacks.add(func1);
     callbacks.remove(func1);
