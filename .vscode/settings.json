@@ -1,0 +1,10 @@
+{
+    "cmake.buildDirectory": "${workspaceFolder}/cmake-build",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/home/user/workspace/template-makefile-project/build",
+            "binaryPath": "/home/user/workspace/template-makefile-project/build/exec-module-name.elf",
+            "binaryArgs": []
+        }
+    ]
+}

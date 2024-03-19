@@ -8,3 +8,5 @@
 /template-makefile-project.creator.user
 /template-makefile-project.files
 /template-makefile-project.includes
+/cmake-build
+
