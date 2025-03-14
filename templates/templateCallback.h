@@ -62,6 +62,51 @@ private:
     std::list<F> _callbacks;
 };
 
+template<typename F, typename... Fparams>
+class Callback1 {
+public:
+    void add(const F callback)
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+
+        for (const F &item : _callbacks)
+        {
+            if (callback == item)
+            {
+                printf("callback %p is already added\n", callback);
+                return;
+            }
+
+        }
+        _callbacks.push_back(callback);
+    }
+
+    void remove(const F callback)
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+
+        for (auto it = _callbacks.begin(); it != _callbacks.end(); ++it) {
+            if (callback == *it)
+            {
+                _callbacks.erase(it);
+                printf("callback %p is removed\n", callback);
+                return;
+            }
+        }
+    }
+
+    void call(Fparams... args)
+    {
+        std::lock_guard<std::mutex> lock(_mutex);
+        for (const auto & callback : _callbacks)
+        {
+            callback(args...);
+        }
+    }
+private:
+    std::mutex _mutex;
+    std::list<F> _callbacks;
+};
 
 
 

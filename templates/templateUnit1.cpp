@@ -10,7 +10,7 @@
 #include "templateExample.h"
 #include "templateCallback.h"
 
-
+typedef void (*FUNC_CALLBACK)(int);
 
 //static Array<uint32_t, 10> g_array;
 
@@ -24,7 +24,8 @@ static void func2(int value) {
 
 void templateUnit1() {
 
-    Callback<std::function<void(int)>, int> callbacks;
+    //Callback<std::function<void(int)>, int> callbacks;
+    Callback1<FUNC_CALLBACK, int> callbacks;
     std::function<void(int)> fn1(func1);
     std::function<void(int)> fn2(std::bind(&func1, std::placeholders::_1));
     //auto ptr1 = fn1.target<void(*)(int)>();
