@@ -21,6 +21,13 @@ public:
     SmartPtr(SmartPtr<T> &&src)      = delete;
     SmartPtr<T>& operator=(const SmartPtr<T> &src);
     SmartPtr<T>& operator=(SmartPtr<T> &&src)      = delete;
+    T& operator*() const {
+     return *m_p;
+    }
+
+    T* operator->() const {
+      return m_p;
+    }
     virtual ~SmartPtr();
 
     uint32_t refCnt() const;
