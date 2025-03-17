@@ -58,7 +58,48 @@ int f(int *a) {
 
 static uint8_t test_large_array[1024 * 1024 * 128L] = {1, 2, 3, 4};
 
+typedef struct CUSTOM_LIST_T {
+    void *next;
+    int value;
+} custom_list_t;
+
+
+
+custom_list_t item_3 = {nullptr, 3};
+custom_list_t item_2 = {&item_3, 2};
+custom_list_t item_1 = {&item_2, 1};
+
+custom_list_t *reverse(custom_list_t *list) {
+
+    custom_list_t *prev = nullptr;
+    custom_list_t *curr = list;
+    custom_list_t *next = nullptr;
+
+    while (curr != nullptr) {
+      next = (custom_list_t *)curr->next; // Store the next node
+      curr->next = prev; // Reverse the current node's pointer
+      prev = curr;       // Move the previous pointer forward
+      curr = next;       // Move the current pointer forward
+    }
+
+    return prev;
+}
+
 int main(int argc, char *argv[]) {
+
+  custom_list_t *first = reverse(&item_1);
+  //custom_list_t *first = &item_1;
+
+  if (first) {
+      while (first) {
+          printf("item %d\n", first->value);
+          first = (custom_list_t *)first->next;
+      }
+  }
+  else
+      printf("no list");
+  return 0;
+
 
   for (uint32_t i = 0; i < sizeof(test_large_array) / sizeof(test_large_array[0]); i++) {
       //test_large_array[i] = 0;
