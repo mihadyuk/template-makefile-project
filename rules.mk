@@ -9,7 +9,7 @@ ifeq ($(MAP_FILE_GEN),yes)
 endif	
 ifeq ($(ODFLAGS),)
 	ODFLAGS	  = -x --syms --demangle --disassemble-all --line-numbers --source
-	ODFLAGS += --disassemble-zeroes
+	ODFLAGS += --disassemble-zeroes --show-all-symbols --visualize-jumps
 endif
 
 ifeq ($(GPROF_EN),yes)
