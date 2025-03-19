@@ -3,6 +3,7 @@
 //#include <stdio.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <bitset>
 #include "unit1.h"
 #include "unit2.h"
 #include "unit2.h"
@@ -103,9 +104,13 @@ int main(void) {
   //    funcHandler(i, (void *)i);
       //g_funcTable[i](nullptr);
   //}
-  uint32_t i = 0;
-  scanf("%lu", &i);
-  funcHandler(i, (void *)i);
+  std::bitset<4> bits;
+  bits[2] = 1;
+  bits[1] = 1;
+  //uint32_t i = 0;
+  //scanf("%lu", &i);
+  printf("%d %d", sizeof(bits), bits[2]);
+  //funcHandler(i, (void *)i);
   //g_funcTable[i]((void *)i);
   return 0;
 }
