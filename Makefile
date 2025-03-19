@@ -72,7 +72,7 @@ endif
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++0x -O2 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -pedantic $(MCPU) $(LTO)
+	CPPOPT = -std=c++20 -O2 -g3 -Wall -fmessage-length=0 -fno-rtti -fno-exceptions -ffunction-sections -fdata-sections -pedantic $(MCPU) $(LTO)
 	CPPOPT += --specs=nano.specs -u _printf_float
 	#CPPOPT += --specs=rdimon.specs
 endif	
