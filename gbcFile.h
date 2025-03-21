@@ -14,8 +14,9 @@
 #include <vector>
 
 struct GbcHeader {
+  static constexpr size_t size() { return 3 + 4 + 3 * 4; }
   static constexpr const char *magic = "gbc";
-  size_t secCount_    = 0;
+  uint32_t secCount_    = 0;
   std::array<uint32_t, 4> offsets_;
 };
 
@@ -45,7 +46,7 @@ public:
   int writeData(const GbcData &data) override;
 private:
   bool isOpened_ = false;
-  GbcHeader header_;
+  //GbcHeader header_;
   GbcData data_;
 };
 
