@@ -17,12 +17,12 @@ struct GbcHeader {
   static constexpr size_t size() { return 3 + 4 + 3 * 4; }
   static constexpr const char *magic = "gbc";
   uint32_t secCount_    = 0;
-  std::array<uint32_t, 4> offsets_;
+  std::array<uint32_t, 4> offsets_ = {0};
 };
 
 struct GbcData {
   uint64_t timestamp_ = 0;
-  std::string asciiSyms_;
+  std::vector<char> asciiSyms_;
   std::vector<uint8_t> blob_;
   uint32_t crcChecksum_ = 0;
 };
