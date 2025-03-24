@@ -12,6 +12,7 @@
 #include <array>
 #include <string>
 #include <vector>
+#include <fstream>
 
 struct GbcHeader {
   static constexpr size_t size() { return 3 + 4 + 4 * 4; }
@@ -44,16 +45,15 @@ public:
 
   int open(const std::string &fullPath);
   void close();
-  bool isOpened() const { return isOpened_; }
+  bool isOpened() const { return fs_.is_open(); }
 
   GbcData readData() override;
   int writeData(const GbcData &data) override;
 private:
   int openInternal(const std::string &fullPath);
 
-  bool isOpened_ = false;
+  std::fstream fs_;
   //GbcHeader header_;
-  GbcData data_;
 };
 
 #endif /* GBCFILE_H_ */

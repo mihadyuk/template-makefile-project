@@ -4,7 +4,6 @@
  *  Created on: Mar 21, 2025
  *      Author: user
  */
-#include <fstream>
 #include <type_traits>
 #include "gbcFile.h"
 
@@ -30,13 +29,6 @@ GbcFile::~GbcFile() {
 //  header.offsets_[i] |= static_cast<uint32_t>(buffer[buf_index++]) << 24;
 //}
 
-int GbcFile::open(const std::string &fullPath) {
-  int retval = openInternal(fullPath);
-  if (retval >= 0)
-    isOpened_ = true;
-  return retval;
-}
-
 template<typename T, size_t chunk_size = 4>
 std::vector<T> readBufTillEOF(std::fstream &fs) {
   static_assert(std::is_same<T, char>::value == true || std::is_same<T, uint8_t>::value == true);
@@ -55,23 +47,37 @@ std::vector<T> readBufTillEOF(std::fstream &fs) {
   return buf;
 }
 
-int GbcFile::openInternal(const std::string &fullPath) {
+int GbcFile::open(const std::string &fullPath) {
 
   if (isOpened())
     return -1;
-  std::fstream fs(fullPath, std::ios_base::binary | std::ios_base::in | std::ios_base::out);
-  if (fs.is_open() == false)
+  fs_.open(fullPath, std::ios_base::binary | std::ios_base::in | std::ios_base::out);
+  if (fs_.is_open() == false)
     return -1;
+  return 0;
+}
+
+void GbcFile::close() {
+  fs_.close();
+}
+
+GbcData GbcFile::readData() {
+
+  if (isOpened() == false)
+    return GbcData();
 
   std::array<char, GbcHeader::size()> buffer;
-  fs.read(buffer.data(), buffer.size());
-  if (fs.gcount() != buffer.size())
-    return -1;
+
+  fs_.clear();
+  fs_.seekg(0);
+  fs_.read(buffer.data(), buffer.size());
+  if (fs_.gcount() != buffer.size())
+    return GbcData();
 
   //parse given header
   std::string magic(buffer.data(), std::char_traits<char>::length(GbcHeader::magic));
   if (magic != GbcHeader::magic)
-    return -1;
+    return GbcData();
 
   GbcHeader header;
   std::copy(buffer.begin() + 3,
@@ -84,48 +90,40 @@ int GbcFile::openInternal(const std::string &fullPath) {
 
   // parse data
   if (header.secCount_ == 0)
-    return 0;
+    return GbcData();
 
-  fs.read(reinterpret_cast<char *>(&data_.timestamp_), sizeof(data_.timestamp_));
+  GbcData data;
+  fs_.read(reinterpret_cast<char *>(&data.timestamp_), sizeof(data.timestamp_));
 
   if (header.secCount_ > 2) {
     std::vector<char> ascii_buf(header.offsets_[2] - header.offsets_[1]);
-    fs.read(ascii_buf.data(), ascii_buf.size());
-    data_.asciiSyms_ = std::move(ascii_buf);
+    fs_.read(ascii_buf.data(), ascii_buf.size());
+    data.asciiSyms_ = std::move(ascii_buf);
 
   }
   else if (header.secCount_ == 2) {
-    data_.asciiSyms_ = readBufTillEOF<char>(fs);
+    data.asciiSyms_ = readBufTillEOF<char>(fs_);
   }
 
 
   if (header.secCount_ > 3) {
       std::vector<uint8_t> blob_buf(header.offsets_[3] - header.offsets_[2]);
-      fs.read(reinterpret_cast<char *>(blob_buf.data()), blob_buf.size());
-      data_.blob_ = std::move(blob_buf);
+      fs_.read(reinterpret_cast<char *>(blob_buf.data()), blob_buf.size());
+      data.blob_ = std::move(blob_buf);
   }
   else if (header.secCount_ == 3) {
-    data_.blob_ = readBufTillEOF<uint8_t>(fs);
+    data.blob_ = readBufTillEOF<uint8_t>(fs_);
   }
 
   if (header.secCount_ == 4) {
     uint32_t checksum = 0;
-    fs.read(reinterpret_cast<char *>(&checksum), sizeof(checksum));
-    if (fs.gcount() != sizeof(checksum))
-      return -1;
-    data_.checksum_ = checksum;
+    fs_.read(reinterpret_cast<char *>(&checksum), sizeof(checksum));
+    if (fs_.gcount() != sizeof(checksum))
+      return GbcData();
+    data.checksum_ = checksum;
   }
 
-  return 0;
-}
-
-void GbcFile::close() {
-  isOpened_ = false;
-  data_ = GbcData();
-}
-
-GbcData GbcFile::readData() {
-  return data_;
+  return data;
 }
 
 int GbcFile::writeData(const GbcData &data) {
