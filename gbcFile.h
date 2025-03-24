@@ -24,7 +24,7 @@ struct GbcData {
   uint64_t timestamp_ = 0;
   std::vector<char> asciiSyms_;
   std::vector<uint8_t> blob_;
-  uint32_t crcChecksum_ = 0;
+  uint32_t checksum_ = 0;
 };
 
 class IGbc {
