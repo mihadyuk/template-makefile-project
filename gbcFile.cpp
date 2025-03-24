@@ -36,6 +36,21 @@ int GbcFile::open(const std::string &fullPath) {
   return retval;
 }
 
+template<typename T>
+std::vector<T> readBuf(std::fstream &fs) {
+  std::vector<T> buf_chunk(4);
+  std::vector<T> buf;
+  while (fs.eof() == false) {
+    fs.read(reinterpret_cast<char *>(buf_chunk.data()), buf_chunk.size());
+    buf_chunk.resize(fs.gcount());
+
+    size_t last_size = buf.size();
+    buf.resize(buf.size() + buf_chunk.size());
+    std::copy(buf_chunk.cbegin(), buf_chunk.cend(), buf.begin() + last_size);
+  }
+  return buf;
+}
+
 int GbcFile::openInternal(const std::string &fullPath) {
 
   if (isOpened())
@@ -76,17 +91,7 @@ int GbcFile::openInternal(const std::string &fullPath) {
 
   }
   else if (header.secCount_ == 2) {
-    std::vector<char> ascii_buf_chunk(4);
-    std::vector<char> ascii_buf;
-    while (fs.eof() == false) {
-      fs.read(ascii_buf_chunk.data(), ascii_buf_chunk.size());
-      ascii_buf_chunk.resize(fs.gcount());
-
-      size_t last_size = ascii_buf.size();
-      ascii_buf.resize(ascii_buf.size() + ascii_buf_chunk.size());
-      std::copy(ascii_buf_chunk.cbegin(), ascii_buf_chunk.cend(), ascii_buf.begin() + last_size);
-    }
-    data_.asciiSyms_ = std::move(ascii_buf);
+    data_.asciiSyms_ = readBuf<char>(fs);
   }
 
 
@@ -96,17 +101,7 @@ int GbcFile::openInternal(const std::string &fullPath) {
       data_.blob_ = std::move(blob_buf);
   }
   else if (header.secCount_ == 3) {
-    std::vector<uint8_t> blob_buf_chunk(4);
-    std::vector<uint8_t> blob_buf;
-    while (fs.eof() == false) {
-      fs.read(reinterpret_cast<char *>(blob_buf_chunk.data()), blob_buf_chunk.size());
-      blob_buf_chunk.resize(fs.gcount());
-
-      size_t last_size = blob_buf.size();
-      blob_buf.resize(blob_buf.size() + blob_buf_chunk.size());
-      std::copy(blob_buf_chunk.cbegin(), blob_buf_chunk.cend(), blob_buf.begin() + last_size);
-    }
-    data_.blob_ = std::move(blob_buf);
+    data_.blob_ = readBuf<uint8_t>(fs);
   }
 
   if (header.secCount_ == 4) {
