@@ -37,11 +37,12 @@ int GbcFile::open(const std::string &fullPath) {
   return retval;
 }
 
-template<typename T>
-std::vector<T> readBuf(std::fstream &fs) {
+template<typename T, size_t chunk_size = 4>
+std::vector<T> readBufTillEOF(std::fstream &fs) {
   static_assert(std::is_same<T, char>::value == true || std::is_same<T, uint8_t>::value == true);
+  static_assert(chunk_size > 0);
 
-  std::vector<T> buf_chunk(4);
+  std::vector<T> buf_chunk(chunk_size);
   std::vector<T> buf;
   while (fs.eof() == false) {
     fs.read(reinterpret_cast<char *>(buf_chunk.data()), buf_chunk.size());
@@ -94,7 +95,7 @@ int GbcFile::openInternal(const std::string &fullPath) {
 
   }
   else if (header.secCount_ == 2) {
-    data_.asciiSyms_ = readBuf<char>(fs);
+    data_.asciiSyms_ = readBufTillEOF<char>(fs);
   }
 
 
@@ -104,7 +105,7 @@ int GbcFile::openInternal(const std::string &fullPath) {
       data_.blob_ = std::move(blob_buf);
   }
   else if (header.secCount_ == 3) {
-    data_.blob_ = readBuf<uint8_t>(fs);
+    data_.blob_ = readBufTillEOF<uint8_t>(fs);
   }
 
   if (header.secCount_ == 4) {

@@ -36,6 +36,10 @@ public:
 class GbcFile : public IGbc {
 public:
   GbcFile();
+  GbcFile(const GbcFile &src) = delete;
+  GbcFile(GbcFile &&src) = delete;
+  GbcFile &operator=(const GbcFile &src) = delete;
+  GbcFile &operator=(GbcFile &&src) = delete;
   virtual ~GbcFile();
 
   int open(const std::string &fullPath);
