@@ -7,6 +7,7 @@
 
 #ifndef GBCFILETEST_H_
 #define GBCFILETEST_H_
+#include <string>
 #include "gbcFile.h"
 
 class GbcFileTest {
@@ -15,7 +16,7 @@ public:
   virtual ~GbcFileTest();
   void run();
 private:
-
+  void run_test(const std::string &fileName, const GbcData &expectedData);
 };
 
 #endif /* GBCFILETEST_H_ */
