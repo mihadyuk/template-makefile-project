@@ -53,6 +53,7 @@ private:
   int openInternal(const std::string &fullPath);
 
   std::fstream fs_;
+  std::string fullPath_;
   //GbcHeader header_;
 };
 

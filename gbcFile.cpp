@@ -5,6 +5,7 @@
  *      Author: user
  */
 #include <type_traits>
+#include <filesystem>
 #include "gbcFile.h"
 
 GbcFile::GbcFile() {
@@ -14,6 +15,7 @@ GbcFile::GbcFile() {
 
 GbcFile::~GbcFile() {
   // TODO Auto-generated destructor stub
+  close();
 }
 
 //header.secCount_  = buffer[4];
@@ -51,14 +53,20 @@ int GbcFile::open(const std::string &fullPath) {
 
   if (isOpened())
     return -1;
+  if (std::filesystem::exists(fullPath) == false) {
+    std::ofstream empty_file(fullPath);
+  }
   fs_.open(fullPath, std::ios_base::binary | std::ios_base::in | std::ios_base::out);
-  if (fs_.is_open() == false)
+  if (fs_.is_open() == false) {
     return -1;
+  }
+  fullPath_ = fullPath;
   return 0;
 }
 
 void GbcFile::close() {
   fs_.close();
+  fullPath_ = "";
 }
 
 GbcData GbcFile::readData() {
@@ -127,7 +135,56 @@ GbcData GbcFile::readData() {
 }
 
 int GbcFile::writeData(const GbcData &data) {
-  return -1;
+  if (isOpened() == false)
+    return -1;
+
+  std::ofstream owerwrite_file(fullPath_, std::ios::out | std::ios::trunc);
+  owerwrite_file.close();
+
+  fs_.clear();
+  fs_.seekg(0);
+  fs_.write(GbcHeader::magic, std::char_traits<char>::length(GbcHeader::magic));
+
+  GbcHeader header;
+  if (data.timestamp_) {
+    header.secCount_++;
+    header.offsets_[0] = GbcHeader::size();
+  }
+  if (data.asciiSyms_.size()) {
+    header.secCount_++;
+    header.offsets_[1] = header.offsets_[0] + sizeof(data.timestamp_);
+  }
+  if (data.blob_.size()) {
+    header.secCount_++;
+    header.offsets_[2] = header.offsets_[1] + data.asciiSyms_.size();
+  }
+  if (data.checksum_) {
+    header.secCount_++;
+    header.offsets_[3] = header.offsets_[2] + data.blob_.size();
+  }
+
+  fs_.write(reinterpret_cast<const char *>(&header.secCount_), sizeof(header.secCount_));
+  fs_.write(reinterpret_cast<const char *>(header.offsets_.data()), header.offsets_.size() * sizeof(uint32_t));
+
+  if (data.timestamp_)
+    fs_.write(reinterpret_cast<const char *>(&data.timestamp_), sizeof(data.timestamp_));
+  else
+    return 0;
+
+  if (data.asciiSyms_.size())
+    fs_.write(reinterpret_cast<const char *>(data.asciiSyms_.data()), data.asciiSyms_.size());
+  else
+    return 0;
+
+  if (data.blob_.size())
+    fs_.write(reinterpret_cast<const char *>(data.blob_.data()), data.blob_.size());
+  else
+    return 0;
+
+  if (data.checksum_)
+    fs_.write(reinterpret_cast<const char *>(&data.checksum_), sizeof(data.checksum_));
+
+  return 0;
 }
 
 

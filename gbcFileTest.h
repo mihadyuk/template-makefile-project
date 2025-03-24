@@ -16,7 +16,8 @@ public:
   virtual ~GbcFileTest();
   void run();
 private:
-  void runTest(const std::string &fileName, const GbcData &expectedData);
+  void runTestRead(const std::string &fileName, const GbcData &expectedData);
+  void runTestWrite(const std::string &fileName, const GbcData &dataToWrite);
 };
 
 #endif /* GBCFILETEST_H_ */
