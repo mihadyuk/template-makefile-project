@@ -53,10 +53,8 @@ int GbcFile::open(const std::string &fullPath) {
 
   if (isOpened())
     return -1;
-  if (std::filesystem::exists(fullPath) == false) {
-    std::ofstream empty_file(fullPath);
-  }
-  fs_.open(fullPath, std::ios_base::binary | std::ios_base::in | std::ios_base::out);
+
+  fs_.open(fullPath, std::ios_base::binary | std::ios_base::in | std::ios_base::app);
   if (fs_.is_open() == false) {
     return -1;
   }
@@ -138,6 +136,7 @@ int GbcFile::writeData(const GbcData &data) {
   if (isOpened() == false)
     return -1;
 
+  // remove file content
   std::ofstream owerwrite_file(fullPath_, std::ios::out | std::ios::trunc);
   owerwrite_file.close();
 
