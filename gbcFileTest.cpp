@@ -18,10 +18,19 @@ GbcFileTest::~GbcFileTest() {
 }
 
 void GbcFileTest::run() {
+  GbcData data;
+  data.timestamp_ = 0x0807060504030201ULL;
+  data.asciiSyms_ = std::move(std::vector<char>{(char)0xab, (char)0xcd, (char)0xef, (char)0xdd});
+  runTest("/home/user/workspace/template-makefile-project/test_sec_2.bin", data);
 
+  data = GbcData();
+  data.timestamp_ = 0x0807060504030201ULL;
+  data.asciiSyms_ = std::move(std::vector<char>{(char)0xab, (char)0xcd, (char)0xef, (char)0xdd});
+  data.blob_ = std::move(std::vector<uint8_t>{0x12, 0x34, 0x56, 0x78, 0x9A, 0xBC});
+  runTest("/home/user/workspace/template-makefile-project/test_sec_3.bin", data);
 }
 
-void GbcFileTest::run_test(const std::string &fileName, const GbcData &expectedData) {
+void GbcFileTest::runTest(const std::string &fileName, const GbcData &expectedData) {
   GbcFile gbcFile;
   int retval = gbcFile.open(fileName);
   printf("opening file \"%s\", retval: %d\n", fileName.c_str(), retval);

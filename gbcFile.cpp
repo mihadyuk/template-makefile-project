@@ -29,8 +29,14 @@ GbcFile::~GbcFile() {
 //  header.offsets_[i] |= static_cast<uint32_t>(buffer[buf_index++]) << 24;
 //}
 
-
 int GbcFile::open(const std::string &fullPath) {
+  int retval = openInternal(fullPath);
+  if (retval >= 0)
+    isOpened_ = true;
+  return retval;
+}
+
+int GbcFile::openInternal(const std::string &fullPath) {
 
   if (isOpened())
     return -1;
@@ -63,13 +69,7 @@ int GbcFile::open(const std::string &fullPath) {
 
   fs.read(reinterpret_cast<char *>(&data_.timestamp_), sizeof(data_.timestamp_));
 
-  if (header.secCount_ <= 1)
-    fs.read(reinterpret_cast<char *>(&data_.timestamp_), sizeof(data_.timestamp_));
-  else
-    return 0;
-
-
-  if (header.secCount_ >= 2) {
+  if (header.secCount_ > 2) {
     std::vector<char> ascii_buf(header.offsets_[2] - header.offsets_[1]);
     fs.read(ascii_buf.data(), ascii_buf.size());
     data_.asciiSyms_ = std::move(ascii_buf);
@@ -90,7 +90,7 @@ int GbcFile::open(const std::string &fullPath) {
   }
 
 
-  if (header.secCount_ >= 3) {
+  if (header.secCount_ > 3) {
       std::vector<uint8_t> blob_buf(header.offsets_[3] - header.offsets_[2]);
       fs.read(reinterpret_cast<char *>(blob_buf.data()), blob_buf.size());
       data_.blob_ = std::move(blob_buf);
@@ -109,13 +109,14 @@ int GbcFile::open(const std::string &fullPath) {
     data_.blob_ = std::move(blob_buf);
   }
 
-  uint32_t checksum = 0;
-  fs.read(reinterpret_cast<char *>(&checksum), sizeof(checksum));
-  if (fs.gcount() != sizeof(checksum)) {
-    return -1;
+  if (header.secCount_ == 4) {
+    uint32_t checksum = 0;
+    fs.read(reinterpret_cast<char *>(&checksum), sizeof(checksum));
+    if (fs.gcount() != sizeof(checksum))
+      return -1;
+    data_.checksum_ = checksum;
   }
 
-  data_.checksum_ = checksum;
   return 0;
 }
 
