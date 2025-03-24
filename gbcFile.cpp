@@ -5,6 +5,7 @@
  *      Author: user
  */
 #include <fstream>
+#include <type_traits>
 #include "gbcFile.h"
 
 GbcFile::GbcFile() {
@@ -38,6 +39,8 @@ int GbcFile::open(const std::string &fullPath) {
 
 template<typename T>
 std::vector<T> readBuf(std::fstream &fs) {
+  static_assert(std::is_same<T, char>::value == true || std::is_same<T, uint8_t>::value == true);
+
   std::vector<T> buf_chunk(4);
   std::vector<T> buf;
   while (fs.eof() == false) {
