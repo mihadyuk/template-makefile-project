@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdint.h>
+#include "gbcFileTest.h"
 
 using namespace std;
 
@@ -86,6 +87,10 @@ custom_list_t *reverse(custom_list_t *list) {
 }
 
 int main(int argc, char *argv[]) {
+
+  GbcFileTest gbcFileTest;
+  gbcFileTest.run();
+  return 0;
 
   custom_list_t *first = reverse(&item_1);
   //custom_list_t *first = &item_1;
