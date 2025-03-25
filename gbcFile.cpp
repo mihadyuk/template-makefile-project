@@ -5,7 +5,6 @@
  *      Author: user
  */
 #include <type_traits>
-#include <filesystem>
 #include "gbcFile.h"
 
 GbcFile::GbcFile() {
