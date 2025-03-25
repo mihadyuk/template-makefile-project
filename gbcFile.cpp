@@ -7,6 +7,15 @@
 #include <type_traits>
 #include "gbcFile.h"
 
+struct GbcHeader {
+  using Offsets = std::array<uint32_t, 4>;
+  static constexpr size_t size() { return 3 + 4 + 4 * 4; }
+  static constexpr const char *magic = "gbc";
+  uint32_t secCount_    = 0;
+  Offsets offsets_ = {0};
+};
+
+
 GbcFile::GbcFile() {
   // TODO Auto-generated constructor stub
 
@@ -90,7 +99,7 @@ GbcData GbcFile::readData() {
             reinterpret_cast<uint8_t*>(&header.secCount_));
 
   std::copy(buffer.begin() + 3 + sizeof(header.secCount_),
-            buffer.begin() + 3 + sizeof(header.secCount_) + header.offsets_.size() * sizeof(uint32_t),
+            buffer.begin() + 3 + sizeof(header.secCount_) + header.offsets_.size() * sizeof(GbcHeader::Offsets::value_type),
             reinterpret_cast<uint8_t *>(header.offsets_.data()));
 
   // parse data
@@ -162,7 +171,7 @@ int GbcFile::writeData(const GbcData &data) {
   }
 
   fs_.write(reinterpret_cast<const char *>(&header.secCount_), sizeof(header.secCount_));
-  fs_.write(reinterpret_cast<const char *>(header.offsets_.data()), header.offsets_.size() * sizeof(uint32_t));
+  fs_.write(reinterpret_cast<const char *>(header.offsets_.data()), header.offsets_.size() * sizeof(GbcHeader::Offsets::value_type));
 
   if (data.timestamp_)
     fs_.write(reinterpret_cast<const char *>(&data.timestamp_), sizeof(data.timestamp_));

@@ -14,12 +14,6 @@
 #include <vector>
 #include <fstream>
 
-struct GbcHeader {
-  static constexpr size_t size() { return 3 + 4 + 4 * 4; }
-  static constexpr const char *magic = "gbc";
-  uint32_t secCount_    = 0;
-  std::array<uint32_t, 4> offsets_ = {0};
-};
 
 struct GbcData {
   uint64_t timestamp_ = 0;
@@ -54,7 +48,6 @@ private:
 
   std::fstream fs_;
   std::string fullPath_;
-  //GbcHeader header_;
 };
 
 #endif /* GBCFILE_H_ */
