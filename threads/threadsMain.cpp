@@ -11,6 +11,7 @@
 
 
 void threadsMain() {
+
   JoinableThread thread;
   assert(thread.isActive() == false);
   thread.start();
@@ -18,6 +19,10 @@ void threadsMain() {
   std::this_thread::sleep_for(std::chrono::milliseconds(3000));
   thread.stop();
   assert(thread.isActive() == false);
+
+  thread.start();
+  assert(thread.isActive() == true);
+  std::this_thread::sleep_for(std::chrono::milliseconds(3000));
 }
 
 
