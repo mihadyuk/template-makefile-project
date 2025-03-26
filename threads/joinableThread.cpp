@@ -9,11 +9,6 @@
 #include "joinableThread.h"
 
 
-
-JoinableThread::JoinableThread() {
-  // TODO Auto-generated constructor stub
-}
-
 JoinableThread::~JoinableThread() {
   // TODO Auto-generated destructor stub
   stop();

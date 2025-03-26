@@ -12,7 +12,7 @@
 
 class JoinableThread {
 public:
-  JoinableThread();
+  JoinableThread() = default;
   JoinableThread(const JoinableThread &) = delete;
   JoinableThread(JoinableThread &&) = delete;
   JoinableThread &operator=(const JoinableThread &) = delete;
