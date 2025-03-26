@@ -23,7 +23,7 @@ public:
   bool isActive() const { return thread_.joinable(); }
   virtual ~JoinableThread();
 private:
-  static void worker(std::stop_token stoken, JoinableThread *self);
+  static void worker(std::stop_token stoken, JoinableThread &self);
 
   std::jthread thread_;
 };

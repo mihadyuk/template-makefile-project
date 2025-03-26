@@ -23,7 +23,7 @@ void JoinableThread::start() {
   if (isActive())
     return;
   printf("starting worker\n");
-  thread_ = std::jthread(worker, this);
+  thread_ = std::jthread(worker, std::ref(*this));
 }
 
 void JoinableThread::stop() {
@@ -35,11 +35,11 @@ void JoinableThread::stop() {
   printf("worker stopped\n");
 }
 
-void JoinableThread::worker(std::stop_token stoken, JoinableThread *self) {
+void JoinableThread::worker(std::stop_token stoken, JoinableThread &self) {
 
   printf("worker started\n");
   while (stoken.stop_requested() == false) {
-  //while (self->thread_.get_stop_token().stop_requested() == false) {
+  //while (self.thread_.get_stop_token().stop_requested() == false) {
     printf("worker\n");
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
   }
