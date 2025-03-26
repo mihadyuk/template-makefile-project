@@ -9,6 +9,7 @@
 #include "round.h"
 #include "crossRefMain.h"
 #include "smartPtrsMain.h"
+#include "threadsMain.h"
 #include "VirtualInheritanceMain.h"
 
 #include <condition_variable>
@@ -60,7 +61,8 @@ int main(int argc, char *argv[]) {
   //memallocMain();
   //classesMain();
   //aggregateInitMain();
-  templatesMain();
+  //templatesMain();
+  threadsMain();
   return 0;
   //std::cout << roundToNearestPow2<uint32_t>(48);
   //crossRefMain();
