@@ -8,6 +8,7 @@
 #ifndef THREADS_JOINABLETHREAD_H_
 #define THREADS_JOINABLETHREAD_H_
 #include <thread>
+#include <stop_token>
 
 class JoinableThread {
 public:
@@ -19,9 +20,10 @@ public:
 
   void start();
   void stop();
+  bool isActive() const { return thread_.joinable(); }
   virtual ~JoinableThread();
 private:
-  void worker();
+  static void worker(std::stop_token stoken, JoinableThread *self);
 
   std::jthread thread_;
 };
