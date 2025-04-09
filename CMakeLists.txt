@@ -43,10 +43,7 @@ endif()
 
 
 file(GLOB SRC_LIST *.cpp)
-
-foreach(SRC_FILE ${SRC_LIST})
-	add_executable(${CMAKE_PROJECT_NAME} ${SRC_FILE})
-endforeach(SRC_FILE ${SRC_LIST})
+add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
 
 get_target_property(TARGET_COMPILE_OPTIONS ${CMAKE_PROJECT_NAME} COMPILE_OPTIONS)  
 message(STATUS "Compile options: ${TARGET_COMPILE_OPTIONS}")
