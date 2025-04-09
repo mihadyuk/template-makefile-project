@@ -42,8 +42,13 @@ endif()
 
 
 
-file(GLOB SRC_LIST *.cpp)
+file(GLOB SRC_LIST *.cpp *.h
+  qt_subdir/*.cpp
+  qt_subdir/*.h)
 add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
+#target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+#    ${PROJECT_SOURCE_DIR}/qt_subdir
+#)
 
 get_target_property(TARGET_COMPILE_OPTIONS ${CMAKE_PROJECT_NAME} COMPILE_OPTIONS)  
 message(STATUS "Compile options: ${TARGET_COMPILE_OPTIONS}")
