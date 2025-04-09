@@ -10,7 +10,6 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < argc; i++) {
         printf("arg[%d] : \"%s\"\r\n", i, argv[i]);
     }
-    QtExampleSkeleton ex;
     std::bitset<8> bits(0x5);
     bits[5] = 1;
     auto str = bits.to_string();
