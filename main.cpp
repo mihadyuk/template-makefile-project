@@ -134,18 +134,21 @@ A mapping of digits to letters (just like on the telephone buttons) is given bel
 std::vector<std::string> letterCombinations(const std::string &digits) {
     std::vector<std::string> retval{""};
 
-    const std::unordered_map<int, std::string> map = {{2, "abc"},
-                                                     {3, "def"},
-                                                     {4, "ghi"},
-                                                     {5, "jkl"},
-                                                     {6, "mno"},
-                                                     {7, "pqrs"},
-                                                     {8, "tuv"},
-                                                     {9, "wxyz"}};
+    const std::unordered_map<int, std::string> map = {{1, ""},
+                                                      {2, "abc"},
+                                                      {3, "def"},
+                                                      {4, "ghi"},
+                                                      {5, "jkl"},
+                                                      {6, "mno"},
+                                                      {7, "pqrs"},
+                                                      {8, "tuv"},
+                                                      {9, "wxyz"}};
     //std::vector<std::string> temp0, temp1, temp2;
     std::vector<std::string> temp;
     for (size_t digit_pos = 0; digit_pos < digits.size(); digit_pos++) {
         std::string pad = map.at(std::atoi(std::string(&digits[digit_pos], 1).c_str()));
+        if (pad.size() == 0)
+            continue;
         for (size_t i = 0; i < retval.size(); i++) {
             for (size_t j = 0; j < pad.size(); j++) {
                 temp.push_back(retval[i] + pad[j]);
@@ -166,6 +169,9 @@ int main(int argc, char *argv[]) {
     //auto vec = twoSum({2, 7, 11, 15}, 9);
     //vec = twoSum({3, 2, 4}, 6);
     auto vec = letterCombinations("");
+    auto vec1 = letterCombinations("1");
+    auto vec12 = letterCombinations("12");
+    auto vec21 = letterCombinations("21");
     auto vec2 = letterCombinations("2");
     auto vec23 = letterCombinations("23");
     auto vec234 = letterCombinations("234");
