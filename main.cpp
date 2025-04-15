@@ -4,7 +4,9 @@
 #include <bitset>
 #include <stdint.h>
 #include <vector>
+#include <cstdlib>
 #include <unordered_map>
+#include <utility>
 //#include "qt_subdir/qtexampleskeleton.h"
 
 //reverse int, example 321 -> 123
@@ -99,6 +101,61 @@ std::vector<int> twoSum(const std::vector<int> &data, int target) {
     return std::vector<int>();
 }
 
+/*
+Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.
+
+A mapping of digits to letters (just like on the telephone buttons) is given below. Note that 1 does not map to any letters.
+
+
+
+
+  Example 1:
+
+  Input: digits = "23"
+  Output: ["ad","ae","af","bd","be","bf","cd","ce","cf"]
+
+  Example 2:
+
+  Input: digits = ""
+  Output: []
+
+  Example 3:
+
+  Input: digits = "2"
+  Output: ["a","b","c"]
+
+
+   Constraints:
+
+                 0 <= digits.length <= 4
+                    digits[i] is a digit in the range ['2', '9'].
+
+*/
+std::vector<std::string> letterCombinations(const std::string &digits) {
+    std::vector<std::string> retval{""};
+
+    const std::unordered_map<int, std::string> map = {{2, "abc"},
+                                                     {3, "def"},
+                                                     {4, "ghi"},
+                                                     {5, "jkl"},
+                                                     {6, "mno"},
+                                                     {7, "pqrs"},
+                                                     {8, "tuv"},
+                                                     {9, "wxyz"}};
+    //std::vector<std::string> temp0, temp1, temp2;
+    std::vector<std::string> temp;
+    for (size_t digit_pos = 0; digit_pos < digits.size(); digit_pos++) {
+        std::string pad = map.at(std::atoi(std::string(&digits[digit_pos], 1).c_str()));
+        for (size_t i = 0; i < retval.size(); i++) {
+            for (size_t j = 0; j < pad.size(); j++) {
+                temp.push_back(retval[i] + pad[j]);
+            }
+        }
+        retval = std::move(temp);
+    }
+    return retval;
+}
+
 int main(int argc, char *argv[]) {
 
     std::cout << "template makefile project \r\n";
@@ -106,8 +163,14 @@ int main(int argc, char *argv[]) {
         printf("arg[%d] : \"%s\"\r\n", i, argv[i]);
     }
 
-    auto vec = twoSum({2, 7, 11, 15}, 9);
-    vec = twoSum({3, 2, 4}, 6);
+    //auto vec = twoSum({2, 7, 11, 15}, 9);
+    //vec = twoSum({3, 2, 4}, 6);
+    auto vec = letterCombinations("");
+    auto vec2 = letterCombinations("2");
+    auto vec23 = letterCombinations("23");
+    auto vec234 = letterCombinations("234");
+    auto vec32 = letterCombinations("32");
+    auto vec37 = letterCombinations("37");
 
     std::bitset<8> bits(0x5);
     bits[5] = 1;
