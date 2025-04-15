@@ -9,6 +9,7 @@
 #include <utility>
 #include <algorithm>
 //#include "qt_subdir/qtexampleskeleton.h"
+#include "romantointeger.h"
 
 //reverse int, example 321 -> 123
 using Buffer = std::vector<uint8_t>;
@@ -251,6 +252,7 @@ int main(int argc, char *argv[]) {
         printf("arg[%d] : \"%s\"\r\n", i, argv[i]);
     }
 
+    RomanToInt().run();
     //auto vec = twoSum({2, 7, 11, 15}, 9);
     //vec = twoSum({3, 2, 4}, 6);
     auto substr1 = findSubstring("barfoothefoobarman", {"foo","bar"});
