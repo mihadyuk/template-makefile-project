@@ -3,6 +3,7 @@
 
 //#include "qt_subdir/qtexampleskeleton.h"
 #include "findsubstring.h"
+#include "groupanagrams.h"
 #include "lettercombinations.h"
 #include "reverseint.h"
 #include "romantointeger.h"
@@ -20,6 +21,7 @@ int main(int argc, char *argv[]) {
         printf("arg[%d] : \"%s\"\r\n", i, argv[i]);
     }
 
+    GroupAnagrams().run();
     RomanToInt().run();
 
     FindSubstring().run();
