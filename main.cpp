@@ -5,6 +5,7 @@
 #include "findsubstring.h"
 #include "groupanagrams.h"
 #include "lettercombinations.h"
+#include "lrucache.h"
 #include "reverseint.h"
 #include "romantointeger.h"
 #include "twosum.h"
@@ -21,6 +22,7 @@ int main(int argc, char *argv[]) {
         printf("arg[%d] : \"%s\"\r\n", i, argv[i]);
     }
 
+    LRUCache().run();
     GroupAnagrams().run();
     RomanToInt().run();
 
