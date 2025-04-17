@@ -11,3 +11,4 @@
 /exec-module-name.elf.stackdump
 /cmake-build
 
+*.user
