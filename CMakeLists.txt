@@ -11,8 +11,10 @@ ADD_CUSTOM_TARGET(release
   COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target all
   COMMENT "Creating the executable in the release mode.")
 
-set(CMAKE_C_COMPILER "gcc")
-set(CMAKE_CXX_COMPILER "g++")
+#set(CMAKE_C_COMPILER "gcc")
+#set(CMAKE_CXX_COMPILER "g++")
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(template-makefile-project 
         VERSION 1.0
@@ -27,17 +29,17 @@ if (CMAKE_BUILD_TYPE)
 	if (build_type STREQUAL debug)
 		message(STATUS "debug compile options")
 		# todo: fix duplicated -O -g options
-		add_compile_options(-std=c++20 -O0 -g3 -pedantic -Wall -fmessage-length=0)
+		add_compile_options(-O0 -g3 -pedantic -Wall -fmessage-length=0)
 	elseif (build_type STREQUAL release)
 		message(STATUS "release compile options")
 		# todo: fix duplicated -O options
-		add_compile_options(-std=c++20 -O2 -g3 -pedantic -Wall -fmessage-length=0)
+		add_compile_options(-O2 -g3 -pedantic -Wall -fmessage-length=0)
 	else()
-	        add_compile_options(-std=c++20 -O0 -g3 -pedantic -Wall -fmessage-length=0)
+	        add_compile_options(-O0 -g3 -pedantic -Wall -fmessage-length=0)
 	endif()
 else()
 	message(STATUS "CMAKE_BUILD_TYPE is not set")
-	add_compile_options(-std=c++0x -O0 -g3 -pedantic -Wall -fmessage-length=0)
+	add_compile_options(-O0 -g3 -pedantic -Wall -fmessage-length=0)
 endif()
 
 
