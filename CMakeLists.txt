@@ -50,15 +50,16 @@ endif()
 
 
 file(GLOB SRC_LIST *.cpp *.h
-classes/*.cpp
-aggregateInit/*.cpp
-cross_references/*.cpp
-exceptions/*.cpp
-mem_alloc/*.cpp
-smart_pointers/*.cpp
-threads/*.cpp
-utilits/*.cpp
-virtual_inheritance/*.cpp)
+classes/*.cpp classes/*.h
+aggregateInit/*.cpp aggregateInit/*.h
+cross_references/*.cpp cross_references/*.h
+exceptions/*.cpp exceptions/*.h
+mem_alloc/*.cpp mem_alloc/*.h
+smart_pointers/*.cpp smart_pointers/*.h
+threads/*.cpp threads/*.h
+utilits/*.cpp utilits/*.h
+virtual_inheritance/*.cpp virtual_inheritance/*.h
+templates/*.h)
 add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
