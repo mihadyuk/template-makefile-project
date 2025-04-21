@@ -1,16 +1,6 @@
 #include <assert.h>
 #include <iostream>
 #include <stdint.h>
-#include "exceptions/exceptionsMain.h"
-#include "mem_alloc/memallocMain.h"
-#include "classes/classesMain.h"
-#include "aggregateInit/aggregateInitMain.h"
-#include "templatesMain.h"
-#include "round.h"
-#include "crossRefMain.h"
-#include "smartPtrsMain.h"
-#include "threadsMain.h"
-#include "VirtualInheritanceMain.h"
 
 #include <condition_variable>
 #include <chrono>
@@ -19,6 +9,18 @@
 #include <condition_variable>
 #include <atomic>
 #include <thread>
+
+#include "exceptionsMain.h"
+#include "memallocMain.h"
+#include "classesMain.h"
+#include "aggregateInitMain.h"
+#include "templatesMain.h"
+#include "round.h"
+#include "crossRefMain.h"
+#include "smartPtrsMain.h"
+#include "threadsMain.h"
+#include "VirtualInheritanceMain.h"
+
 
 static std::mutex g_mutex;
 static std::condition_variable g_cv;

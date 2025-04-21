@@ -49,8 +49,30 @@ endif()
 
 
 
-file(GLOB SRC_LIST *.cpp)
+file(GLOB SRC_LIST *.cpp *.h
+classes/*.cpp
+aggregateInit/*.cpp
+cross_references/*.cpp
+exceptions/*.cpp
+mem_alloc/*.cpp
+smart_pointers/*.cpp
+threads/*.cpp
+utilits/*.cpp
+virtual_inheritance/*.cpp)
 add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
+
+target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+classes
+aggregateInit
+cross_references
+exceptions
+mem_alloc
+smart_pointers
+threads
+utilits
+virtual_inheritance
+templates
+)
 
 get_target_property(TARGET_COMPILE_OPTIONS ${CMAKE_PROJECT_NAME} COMPILE_OPTIONS)
 message(STATUS "Compile options: ${TARGET_COMPILE_OPTIONS}")
