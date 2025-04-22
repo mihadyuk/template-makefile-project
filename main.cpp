@@ -20,6 +20,7 @@
 #include "smartPtrsMain.h"
 #include "threadsMain.h"
 #include "VirtualInheritanceMain.h"
+#include "subscriberMain.h"
 
 
 static std::mutex g_mutex;
@@ -64,7 +65,8 @@ int main(int argc, char *argv[]) {
   //classesMain();
   //aggregateInitMain();
   //templatesMain();
-  threadsMain();
+  //threadsMain();
+  subscriberMain();
   return 0;
   //std::cout << roundToNearestPow2<uint32_t>(48);
   //crossRefMain();
