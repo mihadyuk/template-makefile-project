@@ -22,12 +22,35 @@ static void func2(int value) {
     printf("func2 value: %d\n", value);
 }
 
+struct Test {
+    int val_ = 100;
+    void func(int value) {
+        printf("value: %d\r\n", value + val_);
+    }
+};
+
+struct TestStatic {
+    int val_ = 200;
+    static void func(TestStatic &test, int value) {
+        printf("value: %d\r\n", value + test.val_);
+    }
+};
+
 void templateUnit1() {
 
     //Callback<std::function<void(int)>, int> callbacks;
+
     Callback1<FUNC_CALLBACK, int> callbacks;
     std::function<void(int)> fn1(func1);
     std::function<void(int)> fn2(std::bind(&func1, std::placeholders::_1));
+
+    Test test;
+    std::function<void(int)> fn_test(std::bind(&Test::func, &test, std::placeholders::_1));
+    fn_test(123);
+
+    TestStatic test_static;
+    std::function<void(int)> fn_test_static(std::bind(&TestStatic::func, test_static, std::placeholders::_1));
+    fn_test_static(123);
     //auto ptr1 = fn1.target<void(*)(int)>();
     //auto ptr2 = fn2.target<std::function<void(int)>>();
     callbacks.add(func1);

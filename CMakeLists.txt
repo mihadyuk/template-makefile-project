@@ -59,7 +59,7 @@ smart_pointers/*.cpp smart_pointers/*.h
 threads/*.cpp threads/*.h
 utilits/*.cpp utilits/*.h
 virtual_inheritance/*.cpp virtual_inheritance/*.h
-templates/*.h
+templates/*.h templates/*.cpp
 subscriber/*.cpp subscriber/*.h)
 add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
 

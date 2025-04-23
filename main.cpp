@@ -64,9 +64,9 @@ int main(int argc, char *argv[]) {
   //memallocMain();
   //classesMain();
   //aggregateInitMain();
-  //templatesMain();
+  templatesMain();
   //threadsMain();
-  subscriberMain();
+  //subscriberMain();
   return 0;
   //std::cout << roundToNearestPow2<uint32_t>(48);
   //crossRefMain();
