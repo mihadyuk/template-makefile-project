@@ -73,7 +73,7 @@ public:
         {
             if (callback == item)
             {
-                printf("callback %p is already added\n", callback);
+                printf("callback %p is already added\n", reinterpret_cast<void *>(callback));
                 return;
             }
 
@@ -89,7 +89,7 @@ public:
             if (callback == *it)
             {
                 _callbacks.erase(it);
-                printf("callback %p is removed\n", callback);
+                printf("callback %p is removed\n", reinterpret_cast<void *>(callback));
                 return;
             }
         }
