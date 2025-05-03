@@ -56,8 +56,26 @@ static void thread_func_2(void *p)
     printf("thread closed\n");
 }
 
+#define DIALOG_NAME__(num) Dialog##num
+#define DIALOG_NAME_(num) DIALOG_NAME__(num)
+
+#define DIALOG_NUM_2 2
+#define DIALOG_NUM 1
+
+#define DIALOG_NAME DIALOG_NAME_(DIALOG_NUM)
+
+#define STR_(x) #x
+#define STR(x) STR_(x)
+#define DIALOG_NAME_STR STR(DIALOG_NAME)
 
 int main(int argc, char *argv[]) {
+
+  std::cout << DIALOG_NAME_STR
+            << " " STR(DIALOG_NAME)
+            << " " STR_(DIALOG_NAME)
+            << " "
+            << STR(DIALOG_NAME_(DIALOG_NUM_2))
+            << std::endl;
 
   //std::cout << "template makefile project \r\n";
   //exceptionsMain();
