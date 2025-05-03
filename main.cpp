@@ -56,6 +56,7 @@ static void thread_func_2(void *p)
     printf("thread closed\n");
 }
 
+//https://gcc.gnu.org/onlinedocs/cpp/Argument-Prescan.html
 #define DIALOG_NAME__(num) Dialog##num
 #define DIALOG_NAME_(num) DIALOG_NAME__(num)
 
