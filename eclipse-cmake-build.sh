@@ -13,14 +13,20 @@ echo "last cmdline arg: $last"
 echo "build type: $last"
 
 case $last in
-     all)
-         mkdir -p $cmake_build_folder && cd $cmake_build_folder && cmake --fresh .. && make
+     init)
+         mkdir -p $cmake_build_folder && cd $cmake_build_folder && cmake --fresh ..
+     ;;
+     debug)
+         cd $cmake_build_folder && make debug
+     ;;
+     release)
+         cd $cmake_build_folder && make release
      ;;
      clean)
          rm -Rf $cmake_build_folder
      ;;
      help)
-         echo "$(basename "$0") <all | clean | help>"
+         echo "$(basename "$0") <init | debug | release | clean | help>"
      ;;
      *)
        echo "unspecified build type: $last"
