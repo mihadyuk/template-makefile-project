@@ -41,25 +41,19 @@ int BinarySearch::search(const std::vector<int>& nums, int target) {
     }
 
     size_t first_pos = 0;
-    size_t medium_pos = nums.size() / 2;
     size_t last_pos = nums.size() - 1;
-    while (last_pos - first_pos > 1) {
+    while (last_pos >= first_pos) {
+        size_t medium_pos = (first_pos + last_pos) / 2;
         if (target > nums[medium_pos]) {
-            first_pos = medium_pos;
-            medium_pos = first_pos + (last_pos - first_pos + 1) / 2;
+            first_pos = medium_pos + 1;
             continue;
         }
         else if (target < nums[medium_pos]) {
-            last_pos = medium_pos;
-            medium_pos = first_pos + (last_pos - first_pos + 1) / 2;
+            last_pos = medium_pos - 1;
             continue;
         }
         return (int)medium_pos;
     }
-    if (nums[first_pos] == target)
-        return (int)first_pos;
-    if (nums[last_pos] == target)
-        return (int)last_pos;
     return -1;
 }
 
