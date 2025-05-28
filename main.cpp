@@ -10,6 +10,7 @@
 #include "romantointeger.h"
 #include "twosum.h"
 #include "binarysearch.h"
+#include "slidingwindow.h"
 
 
 
@@ -32,6 +33,7 @@ int main(int argc, char *argv[]) {
     TwoSum().run();
     ReverseInt().run();
     BinarySearch().run();
+    SlidingWindow().run();
 
 
     return 0;
