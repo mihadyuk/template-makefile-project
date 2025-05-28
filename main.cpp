@@ -9,6 +9,7 @@
 #include "reverseint.h"
 #include "romantointeger.h"
 #include "twosum.h"
+#include "binarysearch.h"
 
 
 
@@ -30,6 +31,7 @@ int main(int argc, char *argv[]) {
     LetterCombinations().run();
     TwoSum().run();
     ReverseInt().run();
+    BinarySearch().run();
 
 
     return 0;
