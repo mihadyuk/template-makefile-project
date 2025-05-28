@@ -11,6 +11,7 @@
 #include "twosum.h"
 #include "binarysearch.h"
 #include "slidingwindow.h"
+#include "mergeintervals.h"
 
 
 
@@ -34,6 +35,7 @@ int main(int argc, char *argv[]) {
     ReverseInt().run();
     BinarySearch().run();
     SlidingWindow().run();
+    MergeIntervals().run();
 
 
     return 0;
