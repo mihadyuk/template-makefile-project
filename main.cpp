@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <iostream>
 #include <sys/resource.h>
+#include <stdint.h>
 
 static uint32_t i;
 
