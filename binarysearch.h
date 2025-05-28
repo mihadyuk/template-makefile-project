@@ -9,6 +9,7 @@ public:
     void run();
 private:
     int search(const std::vector<int>& nums, int target);
+    int searchRotaded(const std::vector<int>& nums, int target);
 };
 
 #endif // BINARYSEARCH_H
