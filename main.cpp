@@ -12,6 +12,7 @@
 #include "binarysearch.h"
 #include "slidingwindow.h"
 #include "mergeintervals.h"
+#include "validparentheses.h"
 
 
 
@@ -36,7 +37,7 @@ int main(int argc, char *argv[]) {
     BinarySearch().run();
     SlidingWindow().run();
     MergeIntervals().run();
-
+    ValidParentheses().run();
 
     return 0;
 }
