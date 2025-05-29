@@ -49,7 +49,7 @@ endif()
 
 
 
-file(GLOB SRC_LIST *.cpp)
+file(GLOB SRC_LIST *.cpp *.h)
 add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
 
 get_target_property(TARGET_COMPILE_OPTIONS ${CMAKE_PROJECT_NAME} COMPILE_OPTIONS)  
