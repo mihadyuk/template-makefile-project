@@ -13,6 +13,7 @@
 #include "slidingwindow.h"
 #include "mergeintervals.h"
 #include "validparentheses.h"
+#include "sametree.h"
 
 
 
@@ -38,6 +39,7 @@ int main(int argc, char *argv[]) {
     SlidingWindow().run();
     MergeIntervals().run();
     ValidParentheses().run();
+    SameTree().run();
 
     return 0;
 }
