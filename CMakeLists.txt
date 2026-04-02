@@ -14,11 +14,11 @@ ADD_CUSTOM_TARGET(release
 #set(CMAKE_C_COMPILER "gcc")
 #set(CMAKE_CXX_COMPILER "g++")
 
-# this statement set(CMAKE_CXX_STANDARD 20) turned into -std=gnu++20 option
-# if it is needed to specify c++20 without gnu extensions,
-# 1. comment out set(CMAKE_CXX_STANDARD 20) and set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# 2. add -std=c++20 into add_compile_options statement
-set(CMAKE_CXX_STANDARD 20)
+# this statement set(CMAKE_CXX_STANDARD 23) turned into -std=gnu++23 option
+# if it is needed to specify c++23 without gnu extensions,
+# 1. comment out set(CMAKE_CXX_STANDARD 23) and set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# 2. add -std=c++23 into add_compile_options statement
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 project(template-makefile-project
