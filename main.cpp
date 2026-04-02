@@ -21,6 +21,7 @@
 #include "threadsMain.h"
 #include "VirtualInheritanceMain.h"
 #include "subscriberMain.h"
+#include "coroutinesMain.h"
 
 
 static std::mutex g_mutex;
@@ -83,6 +84,7 @@ int main(int argc, char *argv[]) {
   //memallocMain();
   //classesMain();
   //aggregateInitMain();
+  coroutinesMain();
   templatesMain();
   //threadsMain();
   //subscriberMain();

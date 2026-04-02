@@ -60,7 +60,8 @@ threads/*.cpp threads/*.h
 utilits/*.cpp utilits/*.h
 virtual_inheritance/*.cpp virtual_inheritance/*.h
 templates/*.h templates/*.cpp
-subscriber/*.cpp subscriber/*.h)
+subscriber/*.cpp subscriber/*.h
+coroutines/*.cpp coroutines/*.h)
 add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
 
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
@@ -75,6 +76,7 @@ utilits
 virtual_inheritance
 templates
 subscriber
+coroutines
 )
 
 get_target_property(TARGET_COMPILE_OPTIONS ${CMAKE_PROJECT_NAME} COMPILE_OPTIONS)
