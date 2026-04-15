@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
   g_mutex_2.unlock();
   thread_2.join();
 
-  printf("max timeout %lu\n", static_cast<uint64_t>(std::chrono::milliseconds::max().count()));
+  printf("max timeout %llu\n", static_cast<uint64_t>(std::chrono::milliseconds::max().count()));
   g_timestamp = std::chrono::time_point_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now());
   printf("start thread %u\n", (uint32_t)(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - g_timestamp)).count());
   //g_mutex.lock();
