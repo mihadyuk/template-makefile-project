@@ -8,7 +8,7 @@
 #ifndef TIMEELAPSED_H_
 #define TIMEELAPSED_H_
 #include <chrono>
-#include <type_traits>
+//#include <type_traits>
 
 template <typename ClockSource>
 class TimeElapsedBase {
