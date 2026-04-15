@@ -84,20 +84,20 @@ static TimeElapsed timer;
 
 MyCoroutine coroutineF(int32_t val) {
 
-    printf("%ums, called %s(%d)\n", timer.elapsedMs().count(), __func__, val);
+    printf("%ums, called %s(%d)\n", static_cast<uint32_t>(timer.elapsedMs().count()), __func__, val);
 
     if (val < 0)
         throw std::out_of_range(std::format("val {} is out of range", val));
     for (int32_t i = 0; i < val; i++)
     {
-        printf("%ums, before sleep %d\n", timer.elapsedMs().count(), i);
+        printf("%ums, before sleep %d\n", static_cast<uint32_t>(timer.elapsedMs().count()), i);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        printf("%ums, after sleep %d\n", timer.elapsedMs().count(), i);
+        printf("%ums, after sleep %d\n", static_cast<uint32_t>(timer.elapsedMs().count()), i);
         //co_await MyAwait();
         co_yield i;
         //co_yield void;
     }
-    printf("%ums, co_return\n", timer.elapsedMs().count());
+    printf("%ums, co_return\n", static_cast<uint32_t>(timer.elapsedMs().count()));
     co_return val;
 }
 
@@ -120,18 +120,18 @@ void coroutinesMain() {
 
     for (int32_t i = 0; i < iterations; i++) {
         printf("done() == %s\n", result.done() == true ? "true" : "false");
-        printf("%ums, result.resume() called\n", timer.elapsedMs().count());
+        printf("%ums, result.resume() called\n", static_cast<uint32_t>(timer.elapsedMs().count()));
         result.resume();
         printf("done() == %s\n", result.done() == true ? "true" : "false");
-        printf("%ums, retval: %d\n", timer.elapsedMs().count(), result.promise().retval_);
+        printf("%ums, retval: %d\n", static_cast<uint32_t>(timer.elapsedMs().count()), result.promise().retval_);
         printf("yielded_val: %d\n", result.promise().yielded_val_);
     }
     printf("wait for coroutine finish\n");
     while (result.done() == false) {
-        printf("%ums, result.resume() called\n", timer.elapsedMs().count());
+        printf("%ums, result.resume() called\n", static_cast<uint32_t>(timer.elapsedMs().count()));
         result.resume();
         printf("done() == %s\n", result.done() == true ? "true" : "false");
-        printf("%ums, retval: %d\n", timer.elapsedMs().count(), result.promise().retval_);
+        printf("%ums, retval: %d\n", static_cast<uint32_t>(timer.elapsedMs().count()), result.promise().retval_);
         printf("yielded_val: %d\n", result.promise().yielded_val_);
     }
     printf("result.destroy() called\n");
