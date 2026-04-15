@@ -21,7 +21,8 @@ INCDIR = .\
          smart_pointers \
          virtual_inheritance \
          threads \
-		 subscriber
+		 subscriber \
+		 coroutines
 
 # C source files
 CSRC = $(wildcard ./*.c)
@@ -39,7 +40,8 @@ CPPSRC = $(wildcard ./*.cpp) \
          $(wildcard smart_pointers/*.cpp) \
          $(wildcard virtual_inheritance/*.cpp) \
          $(wildcard threads/*.cpp) \
-		 $(wildcard subscriber/*.cpp)
+		 $(wildcard subscriber/*.cpp) \
+		 $(wildcard coroutines/*.cpp)
 
 #asm source files
 ASSRC = $(wildcard ./*.S)
@@ -71,7 +73,7 @@ endif
 
 #c++ specific options
 ifeq ($(CPPOPT),)
-	CPPOPT = -std=c++20 -O0 -g3 -Wall -fmessage-length=0 -pedantic
+	CPPOPT = -std=c++23 -O0 -g3 -Wall -fmessage-length=0 -pedantic
 endif	
 
 #asm options
