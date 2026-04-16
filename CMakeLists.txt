@@ -14,21 +14,21 @@ ADD_CUSTOM_TARGET(release
 #set(CMAKE_C_COMPILER "gcc")
 #set(CMAKE_CXX_COMPILER "g++")
 
-# this statement set(CMAKE_CXX_STANDARD 20) turned into -std=gnu++20 option
-# if it is needed to specify c++20 without gnu extensions,
-# 1. comment out set(CMAKE_CXX_STANDARD 20) and set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# 2. add -std=c++20 into add_compile_options statement
-set(CMAKE_CXX_STANDARD 20)
+# this statement set(CMAKE_CXX_STANDARD 23) turned into -std=gnu++23 option
+# if it is needed to specify c++23 without gnu extensions,
+# 1. comment out set(CMAKE_CXX_STANDARD 23) and set(CMAKE_CXX_STANDARD_REQUIRED ON)
+# 2. add -std=c++23 into add_compile_options statement
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-project(template-makefile-project 
+project(template-makefile-project
         VERSION 1.0
         DESCRIPTION "cmake project template"
         LANGUAGES CXX C)
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-if (CMAKE_BUILD_TYPE) 
+if (CMAKE_BUILD_TYPE)
 	string(TOLOWER ${CMAKE_BUILD_TYPE} build_type)
 
 	if (build_type STREQUAL debug)
@@ -52,6 +52,10 @@ endif()
 file(GLOB SRC_LIST *.cpp *.h)
 add_executable(${CMAKE_PROJECT_NAME} ${SRC_LIST})
 
-get_target_property(TARGET_COMPILE_OPTIONS ${CMAKE_PROJECT_NAME} COMPILE_OPTIONS)  
+#target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
+#include dir
+#)
+
+get_target_property(TARGET_COMPILE_OPTIONS ${CMAKE_PROJECT_NAME} COMPILE_OPTIONS)
 message(STATUS "Compile options: ${TARGET_COMPILE_OPTIONS}")
 
