@@ -17,7 +17,6 @@ class TimeElapsedBase {
                   std::is_same_v<ClockSource, std::chrono::high_resolution_clock>);
     static_assert(ClockSource::is_steady);
 #endif
-    ClockSource::time_point timeStamp_;
 public:
     TimeElapsedBase() {
         start();
@@ -31,6 +30,8 @@ public:
     std::chrono::milliseconds elapsedMs() {
         return std::chrono::duration_cast<std::chrono::milliseconds>(ClockSource::now() - timeStamp_);
     }
+private:
+    ClockSource::time_point timeStamp_;
 };
 
 using TimeElapsed = TimeElapsedBase<std::chrono::steady_clock>;
