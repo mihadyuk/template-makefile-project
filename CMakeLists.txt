@@ -49,7 +49,7 @@ endif()
 
 if (WIN32)
 	message(STATUS "running on windows platform")
-	add_compile_options(-D OS_TYPE_WIN=1)
+	add_compile_options(-DOS_TYPE_WIN)
 endif()
 
 
