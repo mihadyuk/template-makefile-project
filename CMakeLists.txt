@@ -47,6 +47,11 @@ else()
 	add_compile_options(-O0 -g3 -pedantic -Wall -fmessage-length=0)
 endif()
 
+if (WIN32)
+	message(STATUS "running on windows platform")
+	add_compile_options(-D OS_TYPE_WIN=1)
+endif()
+
 
 
 file(GLOB SRC_LIST *.cpp *.h
