@@ -15,6 +15,18 @@ struct MyCoroutine : std::coroutine_handle<MyPromise>
     ~MyCoroutine() {
         printf("called %s() from 0x%p\n", __func__, static_cast<void *>(this));
     }
+
+    //operator co_await() {}
+    bool await_ready() {
+        printf("called %s() from 0x%p\n", __func__, static_cast<void *>(this));
+        return false;
+    }
+    void await_suspend(std::coroutine_handle<> h) {
+        printf("called %s() from 0x%p\n", __func__, static_cast<void *>(this));
+    }
+    void await_resume() {
+        printf("called %s() from 0x%p\n", __func__, static_cast<void *>(this));
+    }
 };
 
 struct MyPromise
@@ -82,6 +94,11 @@ struct MyAwait {
 
 static TimeElapsed timer;
 
+MyCoroutine awaiter(int32_t val) {
+    printf("called %s(), val = %d\n", __func__, val);
+    co_return val;
+}
+
 MyCoroutine coroutineF(int32_t val) {
 
     printf("%ums, called %s(%d)\n", static_cast<uint32_t>(timer.elapsedMs().count()), __func__, val);
@@ -93,7 +110,7 @@ MyCoroutine coroutineF(int32_t val) {
         printf("%ums, before sleep %d\n", static_cast<uint32_t>(timer.elapsedMs().count()), i);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
         printf("%ums, after sleep %d\n", static_cast<uint32_t>(timer.elapsedMs().count()), i);
-        //co_await MyAwait();
+        co_await awaiter(val);
         co_yield i;
         //co_yield void;
     }
